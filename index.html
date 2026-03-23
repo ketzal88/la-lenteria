@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Lenter&iacute;a - Gesti&oacute;n de Pedidos</title>
+<link rel="icon" href="LOGO.png" type="image/png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
   :root{--bg:#f5f2ee;--surface:#fdfcfa;--border:#e0dbd3;--accent:#1a3a4a;--accent2:#c8a96e;--text:#1c1917;--muted:#78716c;--danger:#9b2c2c;--success:#166534;--radius:4px}
@@ -12,6 +13,7 @@
   .login-screen{position:fixed;inset:0;background:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:2rem}
   .login-screen.hidden{display:none}
   .login-brand{text-align:center;color:white}
+  .login-brand img{width:120px;height:120px;object-fit:contain;margin-bottom:1rem}
   .login-brand h1{font-family:'DM Serif Display',serif;font-size:2.5rem;color:var(--accent2);letter-spacing:.05em}
   .login-brand h1 span{color:white;font-style:italic}
   .login-brand p{color:rgba(255,255,255,.5);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.5rem}
@@ -20,6 +22,8 @@
   .btn-google svg{width:20px;height:20px}
   .login-error{color:#fca5a5;font-size:.85rem;max-width:300px;text-align:center;min-height:1.2em}
   .app-header{background:var(--accent);color:white;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+  .app-header .header-brand{display:flex;align-items:center;gap:.6rem}
+  .app-header .header-brand img{width:36px;height:36px;object-fit:contain}
   .app-header h1{font-family:'DM Serif Display',serif;font-size:1.3rem;letter-spacing:.03em;color:var(--accent2)}
   .app-header h1 span{color:white;font-style:italic}
   .header-right{display:flex;align-items:center;gap:1rem}
@@ -88,6 +92,33 @@
   .check-row{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
   .check-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
   .check-row label{font-size:.85rem;font-weight:500;cursor:pointer;color:var(--text)}
+  .queue-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem}
+  .queue-item-thumb{width:48px;height:48px;border-radius:4px;object-fit:cover;border:1px solid var(--border)}
+  .queue-item-info{flex:1;min-width:0}
+  .queue-item-name{font-size:.85rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .queue-item-status{font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:.25rem;margin-top:.2rem}
+  .q-badge{padding:.2rem .5rem;border-radius:4px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+  .q-pending{background:rgba(200,169,110,.15);color:var(--accent2)}
+  .q-processing{background:rgba(59,130,246,.15);color:#3b82f6;animation:qpulse 1.5s infinite}
+  @keyframes qpulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .q-success{background:rgba(22,101,52,.15);color:var(--success)}
+  .q-error{background:rgba(155,44,44,.15);color:var(--danger)}
+  .review-card{background:var(--surface);border:2px solid var(--accent2);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+  .review-header{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem}
+  .review-thumb{width:80px;height:80px;border-radius:var(--radius);object-fit:cover;border:1px solid var(--border);cursor:pointer;transition:transform .2s}
+  .review-thumb:hover{transform:scale(1.05)}
+  .review-conf{font-size:.7rem;font-weight:600;padding:.25rem .5rem;border-radius:4px;background:rgba(200,169,110,.15);color:var(--accent2);margin-left:auto;white-space:nowrap}
+  .review-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+  .sub-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:1rem 0 .4rem}
+  .btn-sm{padding:.4rem .9rem;font-size:.75rem}
+  .progress-bar{width:100%;height:4px;background:var(--border);border-radius:2px;margin:.75rem 0;overflow:hidden}
+  .progress-fill{height:100%;background:var(--accent2);border-radius:2px;transition:width .3s}
+  .cost-calc{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1.25rem}
+  .cost-calc-title{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+  .cost-row{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;padding:.2rem 0;color:var(--text)}
+  .cost-row.total-row{border-top:1px solid var(--border);margin-top:.4rem;padding-top:.4rem;font-weight:700;color:var(--accent)}
+  .cost-val{font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+  .cost-note{font-size:.72rem;color:var(--muted);margin-top:.6rem;line-height:1.4}
   #print-area{display:none}
   @media print{
     @page{size:216mm 356mm;margin:0}
@@ -98,7 +129,8 @@
     .print-bottom{height:140mm;padding:12mm 14mm 12mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
     .print-ticket{height:76mm;padding:6mm 14mm;display:flex;flex-direction:column;justify-content:center;position:relative}
     .print-ticket .print-cut-label{top:-3mm;bottom:auto}
-    .print-optica-name{font-size:22pt;font-weight:700;letter-spacing:.05em;color:#1a3a4a;text-transform:uppercase;margin-bottom:1mm}
+    .print-optica-name{margin-bottom:1mm}
+    .print-optica-name img{height:14mm;object-fit:contain}
     .print-optica-sub{font-size:7pt;color:#666;letter-spacing:.06em;margin-bottom:4mm}
     .print-divider{height:1px;background:#1a3a4a;margin-bottom:4mm}
     .print-patient-row{display:flex;gap:8mm;margin-bottom:3mm;align-items:baseline}
@@ -120,9 +152,9 @@
     .print-finance-value{font-size:12pt;font-weight:700;color:#1a3a4a}
     .print-finance-value.big{font-size:14pt}
     .print-fecha{margin-left:auto;font-size:8pt;color:#666;text-align:right}
-    .print-bottom .print-optica-name{font-size:13pt}
+    .print-bottom .print-optica-name img{height:10mm}
     .print-bottom .print-section-title{margin-top:2mm}
-    .print-ticket .print-optica-name{font-size:11pt;margin-bottom:1mm}
+    .print-ticket .print-optica-name img{height:8mm}
     .print-ticket .print-divider{margin-bottom:3mm}
     .print-ticket-row{display:flex;align-items:baseline;gap:6mm;margin-bottom:2mm}
     .print-ticket-order{font-size:8pt;color:#444;letter-spacing:.05em}
@@ -140,7 +172,7 @@
 </head>
 <body>
 <div id="login-screen" class="login-screen">
-  <div class="login-brand"><h1>La Lenter&#237;a</h1><p>Sistema de pedidos</p></div>
+  <div class="login-brand"><img src="LOGO.png" alt="La Lentería"><h1>La Lenter&#237;a</h1><p>Sistema de pedidos</p></div>
   <button class="btn-google" onclick="loginGoogle()">
     <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
     Iniciar sesi&#243;n con Google
@@ -149,10 +181,11 @@
 </div>
 <div id="app-content" class="app-content">
 <header class="app-header">
-  <h1>La Lenter&#237;a</h1>
+  <div class="header-brand"><img src="LOGO.png" alt="La Lentería"><h1>La Lenter&#237;a</h1></div>
   <div class="tabs">
     <button class="tab-btn active" onclick="showView('nuevo')">Nuevo pedido</button>
     <button class="tab-btn" onclick="showView('historial')">Historial</button>
+    <button class="tab-btn" onclick="showView('carga')">Carga IA</button>
   </div>
   <div class="header-right">
     <div id="sync-status" class="sync-indicator sync-ok" title="Sincronizado">&#9729; Sync</div>
@@ -225,11 +258,62 @@
     <div class="card" style="margin-bottom:0;border-bottom:none;border-radius:4px 4px 0 0;"><div class="search-bar"><input id="h-search" type="text" placeholder="Buscar por nombre o DNI..." oninput="renderHistorial()"></div></div>
     <div id="records-container" class="records-list" style="background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;padding:1rem 1.25rem;"></div>
   </div>
+  <!-- ═══ CARGA MASIVA IA ═══ -->
+  <div id="view-carga" class="view">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Carga Masiva de Recetas (IA)</div>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:1.25rem;">Subi fotos de sobres escritos a mano. El sistema extrae los datos automaticamente.</p>
+      <input type="file" id="batch-files" accept="image/*" multiple style="display:none" onchange="handleBatchFiles(event)">
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="document.getElementById('batch-files').click()">Seleccionar fotos</button>
+        <span id="batch-count" style="color:var(--muted);font-size:.85rem;"></span>
+      </div>
+      <div class="cost-calc">
+        <div class="cost-calc-title">Calculador de costo API</div>
+        <div class="field" style="max-width:200px;margin-bottom:.75rem">
+          <label>Cantidad de fotos</label>
+          <input id="cost-qty" type="number" value="50" min="1" max="9999" oninput="updateCostCalc()">
+        </div>
+        <div id="cost-breakdown">
+          <div class="cost-row"><span>Tokens input/foto (~1800)</span><span class="cost-val" id="cost-input">$0.009</span></div>
+          <div class="cost-row"><span>Tokens output/foto (~350)</span><span class="cost-val" id="cost-output">$0.007</span></div>
+          <div class="cost-row total-row"><span>Costo total estimado</span><span class="cost-val" id="cost-total">$0.016</span></div>
+        </div>
+        <div class="cost-note">
+          Modelo: Gemini 2.0 Flash &mdash; $0.10/M tokens input, $0.40/M tokens output.<br>
+          ~1290 tokens por imagen + ~500 del prompt. Salida ~350 tokens (JSON).<br>
+          Tier gratuito disponible: 1500 req/dia sin costo.
+        </div>
+      </div>
+    </div>
+    <div id="batch-queue-section" style="display:none">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+          <div class="card-title" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="dot"></span>Cola (<span id="queue-total">0</span>)</div>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn btn-outline btn-sm" onclick="clearBatchQueue()">Limpiar</button>
+            <button id="btn-process" class="btn btn-gold btn-sm" onclick="processBatchQueue()">Procesar todo</button>
+          </div>
+        </div>
+        <div id="batch-progress" style="display:none"><div class="progress-bar"><div id="progress-fill" class="progress-fill" style="width:0%"></div></div><div id="progress-text" style="font-size:.75rem;color:var(--muted);text-align:center"></div></div>
+        <div id="queue-items"></div>
+      </div>
+    </div>
+    <div id="review-section" style="display:none">
+      <div class="card" style="background:transparent;border:none;padding:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div class="card-title" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="dot"></span>Revisar y guardar (<span id="review-count">0</span>)</div>
+          <button class="btn btn-gold btn-sm" onclick="saveAllReviewed()">Guardar todos</button>
+        </div>
+        <div id="review-items"></div>
+      </div>
+    </div>
+  </div>
 </main>
 </div>
 <div id="print-area">
   <div class="print-top">
-    <div class="print-optica-name">LA LENTER&#205;A</div>
+    <div class="print-optica-name"><img src="LOGO.png" alt="La Lentería"></div>
     <div class="print-optica-sub">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;|&nbsp; Tel: 11 2766-9650 &nbsp;|&nbsp; @lalenteria.optica</div>
     <div class="print-divider"></div>
     <div class="print-patient-row"><div class="print-patient-name" id="p-nombre">-</div><div class="print-patient-meta">Pedido N&#176;: <strong id="p-orden">-</strong></div><div class="print-patient-meta">DNI: <span id="p-dni">-</span></div><div class="print-patient-meta">Tel: <span id="p-tel">-</span></div></div>
@@ -244,7 +328,7 @@
     <span class="print-cut-label">&#9986;</span>
   </div>
   <div class="print-bottom">
-    <div class="print-optica-name">LA LENTER&#205;A</div>
+    <div class="print-optica-name"><img src="LOGO.png" alt="La Lentería"></div>
     <div class="print-optica-sub">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;|&nbsp; Tel: 11 2766-9650</div>
     <div class="print-divider"></div>
     <div class="print-patient-row"><div class="print-patient-name" id="p2-nombre">-</div><div class="print-patient-meta">Pedido N&#176;: <strong id="p2-orden">-</strong></div><div class="print-patient-meta">DNI: <span id="p2-dni">-</span></div><div class="print-patient-meta">Tel: <span id="p2-tel">-</span></div></div>
@@ -258,7 +342,7 @@
     <span class="print-cut-label">&#9986;</span>
   </div>
   <div class="print-ticket">
-    <div class="print-optica-name">LA LENTER&#205;A</div>
+    <div class="print-optica-name"><img src="LOGO.png" alt="La Lentería"></div>
     <div class="print-optica-sub">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;|&nbsp; 11 2766-9650 &nbsp;|&nbsp; @lalenteria.optica</div>
     <div class="print-divider"></div>
     <div class="print-ticket-row"><span class="print-ticket-order">Pedido N&#176;: <strong id="pt-orden">-</strong></span><span class="print-ticket-name" id="pt-nombre">-</span></div>
@@ -271,14 +355,14 @@
 <div class="toast" id="toast"></div>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import{getAuth,signInWithRedirect,getRedirectResult,signOut,onAuthStateChanged,GoogleAuthProvider}from"https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import{getAuth,signInWithPopup,signOut,onAuthStateChanged,GoogleAuthProvider}from"https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 import{getFirestore,collection,doc,setDoc,getDocs,deleteDoc,writeBatch}from"https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyAxn1emM-y2iVZ2or94QY9juUq5Cza_dfA",authDomain:"la-lenteria-ac3ff.firebaseapp.com",projectId:"la-lenteria-ac3ff",storageBucket:"la-lenteria-ac3ff.firebasestorage.app",messagingSenderId:"280893742842",appId:"1:280893742842:web:21d4714e3f602bf1607343",measurementId:"G-8MK13B37SK"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),googleProvider=new GoogleAuthProvider();
 let currentUid=null;
 const $=id=>document.getElementById(id);
 function showToast(msg,type=''){const t=$('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>t.className='toast',2600)}
-function showView(v){document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));$('view-'+v).classList.add('active');const tabs=document.querySelectorAll('.tab-btn');if(v==='nuevo')tabs[0]?.classList.add('active');else tabs[1]?.classList.add('active');if(v==='historial')renderHistorial()}
+function showView(v){document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));$('view-'+v).classList.add('active');const tabs=document.querySelectorAll('.tab-btn');const tabMap={nuevo:0,historial:1,carga:2};if(tabMap[v]!==undefined)tabs[tabMap[v]]?.classList.add('active');if(v==='historial')renderHistorial()}
 function calcResto(){const t=parseFloat($('f-total').value)||0,s=parseFloat($('f-senia').value)||0;$('f-resto').value=(t-s).toFixed(2)}
 function fmtMoney(v){if(!v&&v!==0)return'-';return'$'+parseFloat(v).toLocaleString('es-AR',{minimumFractionDigits:0})}
 function fmtDate(d){if(!d)return'-';const[y,m,di]=d.split('-');return di+'/'+m+'/'+y}
@@ -308,14 +392,151 @@ function imprimirDesdeHistorial(id){const d=getPedidos().find(p=>p.id===id);if(!
 function eliminarPedido(id){if(!confirm('\u00bfEliminar este pedido del historial?'))return;setPedidos(getPedidos().filter(p=>p.id!==id));renderHistorial();showToast('Pedido eliminado');syncDeleteFromFirestore(id)}
 function cargarEnForm(id){const d=getPedidos().find(p=>p.id===id);if(!d)return;$('f-nombre').value=d.nombre||'';$('f-dni').value=d.dni||'';$('f-tel').value=d.tel||'';$('f-fecha').value=d.fecha||'';$('f-entrega').value=d.entrega||'';$('f-tipo').value=d.tipo||'normal';$('f-medico').value=d.medico||'';$('f-matricula').value=d.matricula||'';$('f-fecha-receta').value=d.fechaReceta||'';$('l-od-esf').value=d.l?.od?.esf||'';$('l-od-cil').value=d.l?.od?.cil||'';$('l-od-eje').value=d.l?.od?.eje||'';$('l-od-adi').value=d.l?.od?.adi||'';$('l-oi-esf').value=d.l?.oi?.esf||'';$('l-oi-cil').value=d.l?.oi?.cil||'';$('l-oi-eje').value=d.l?.oi?.eje||'';$('l-oi-adi').value=d.l?.oi?.adi||'';$('l-armazon').value=d.l?.armazon||'';$('l-lentes').value=d.l?.lentes||'';$('c-od-esf').value=d.c?.od?.esf||'';$('c-od-cil').value=d.c?.od?.cil||'';$('c-od-eje').value=d.c?.od?.eje||'';$('c-od-adi').value=d.c?.od?.adi||'';$('c-oi-esf').value=d.c?.oi?.esf||'';$('c-oi-cil').value=d.c?.oi?.cil||'';$('c-oi-eje').value=d.c?.oi?.eje||'';$('c-oi-adi').value=d.c?.oi?.adi||'';$('c-armazon').value=d.c?.armazon||'';$('c-lentes').value=d.c?.lentes||'';$('f-lente').value=d.lente||'';$('f-tratamiento').value=d.tratamiento||'';$('f-obs').value=d.obs||'';$('f-conservar').checked=d.conservar===true||d.conservar==='si';$('f-total').value=d.total||'';$('f-senia').value=d.senia||'';$('f-resto').value=d.resto||'';showView('nuevo');showToast('Pedido cargado en formulario','success')}
 function renderHistorial(){const q=($('h-search')?.value||'').toLowerCase();const arr=getPedidos().filter(p=>!q||(p.nombre||'').toLowerCase().includes(q)||(p.dni||'').includes(q));const cont=$('records-container');if(!arr.length){cont.innerHTML='<div class="empty-state"><div class="empty-icon">&#128203;</div>'+(q?'Sin resultados para "'+q+'"':'Todav\u00eda no hay pedidos guardados.')+'</div>';return}cont.innerHTML=arr.map(p=>{const isPami=p.tipo==='pami';const ordenStr=isPami?'P'+String(p.id).slice(-4):String(p.id).slice(-4);const badge=isPami?'<span class="badge-pami">PAMI</span>':'';return'<div class="record-item"><div><div class="record-name">'+(p.nombre||'-')+badge+'</div><div class="record-meta">N\u00b0 '+ordenStr+' &middot; DNI: '+(p.dni||'-')+' &middot; Tel: '+(p.tel||'-')+' &middot; '+(p.fecha?fmtDate(p.fecha):'-')+(p.lente?' &middot; '+p.lente:'')+(p.total?' &middot; Total: '+fmtMoney(p.total):'')+'</div></div><div class="record-actions"><button class="btn btn-outline" onclick="cargarEnForm('+p.id+')" title="Cargar en formulario">&#9998;</button><button class="btn btn-gold" onclick="imprimirDesdeHistorial('+p.id+')" title="Reimprimir">&#128424;</button><button class="btn btn-danger" onclick="eliminarPedido('+p.id+')" title="Eliminar">&#128465;</button></div></div>'}).join('')}
-async function loginGoogle(){try{$('login-error').textContent='';await signInWithRedirect(auth,googleProvider)}catch(e){console.error('Login error:',e);$('login-error').textContent='Error al iniciar sesi\u00f3n. Intent\u00e1 de nuevo.'}}
+async function loginGoogle(){try{$('login-error').textContent='';await signInWithPopup(auth,googleProvider)}catch(e){console.error('Login error:',e);$('login-error').textContent='Error al iniciar sesi\u00f3n. Intent\u00e1 de nuevo.'}}
 async function logoutUser(){try{await signOut(auth)}catch(e){console.error('Logout error:',e)}}
 function initApp(){$('f-fecha').value=new Date().toISOString().split('T')[0];updateSyncUI(navigator.onLine?'ok':'offline')}
-getRedirectResult(auth).catch(e=>console.warn('Redirect result error:',e));
 onAuthStateChanged(auth,async(user)=>{if(user){currentUid=user.uid;$('login-screen').classList.add('hidden');$('app-content').classList.add('visible');$('user-avatar').src=user.photoURL||'';$('user-name').textContent=user.displayName||user.email||'';initApp();await mergeFromFirestore()}else{currentUid=null;$('login-screen').classList.remove('hidden');$('app-content').classList.remove('visible')}});
 window.addEventListener('online',()=>{updateSyncUI('pending');processSyncQueue().then(()=>mergeFromFirestore())});
 window.addEventListener('offline',()=>updateSyncUI('offline'));
-window.showView=showView;window.calcResto=calcResto;window.guardarPedido=guardarPedido;window.limpiarForm=limpiarForm;window.imprimirPedido=imprimirPedido;window.imprimirDesdeHistorial=imprimirDesdeHistorial;window.eliminarPedido=eliminarPedido;window.cargarEnForm=cargarEnForm;window.renderHistorial=renderHistorial;window.loginGoogle=loginGoogle;window.logoutUser=logoutUser;
+// ─── BATCH OCR ───
+const OCR_URL='https://ai-analyzer-eight.vercel.app/api/ocr/prescription';
+const OCR_KEY='la-lenteria-ocr-2024';
+let batchQueue=[],reviewedItems=[],batchProcessing=false;
+// Gemini 2.0 Flash pricing
+const COST_INPUT_PER_M=0.10,COST_OUTPUT_PER_M=0.40,TOKENS_INPUT_PER_IMG=1800,TOKENS_OUTPUT_PER_IMG=350;
+function updateCostCalc(){
+  const n=parseInt($('cost-qty')?.value)||0;
+  const inCost=(n*TOKENS_INPUT_PER_IMG/1e6*COST_INPUT_PER_M);
+  const outCost=(n*TOKENS_OUTPUT_PER_IMG/1e6*COST_OUTPUT_PER_M);
+  const total=inCost+outCost;
+  const fmt=v=>v<0.01?'< $0.01':'$'+v.toFixed(3);
+  if($('cost-input'))$('cost-input').textContent=fmt(inCost);
+  if($('cost-output'))$('cost-output').textContent=fmt(outCost);
+  if($('cost-total'))$('cost-total').textContent=fmt(total);
+}
+
+async function handleBatchFiles(e){
+  const files=Array.from(e.target.files||[]);
+  for(const f of files){
+    if(!f.type.startsWith('image/'))continue;
+    const thumb=await new Promise(r=>{const rd=new FileReader();rd.onload=ev=>r(ev.target.result);rd.readAsDataURL(f)});
+    batchQueue.push({id:Date.now()+Math.random(),file:f,thumb,name:f.name,status:'pending',data:null,error:null});
+  }
+  e.target.value='';
+  renderQueue();
+}
+
+function renderQueue(){
+  const sec=$('batch-queue-section'),items=$('queue-items'),total=$('queue-total'),count=$('batch-count');
+  if(!batchQueue.length){sec.style.display='none';count.textContent='';return}
+  sec.style.display='block';
+  total.textContent=batchQueue.length;
+  count.textContent=batchQueue.length+' foto'+(batchQueue.length===1?'':'s');
+  const pending=batchQueue.filter(i=>i.status==='pending').length;
+  if(pending&&$('cost-qty')){$('cost-qty').value=pending;updateCostCalc()}
+  items.innerHTML=batchQueue.map(i=>'<div class="queue-item"><img class="queue-item-thumb" src="'+i.thumb+'"><div class="queue-item-info"><div class="queue-item-name">'+i.name+'</div><div class="queue-item-status">'+qBadge(i)+(i.error?'<span style="color:var(--danger);margin-left:.3rem">'+i.error+'</span>':'')+'</div></div>'+(i.status==='pending'?'<button class="btn btn-outline btn-sm" onclick="removeQueueItem('+i.id+')">&#10005;</button>':'')+'</div>').join('');
+}
+
+function qBadge(i){
+  const m={pending:'q-pending" >Pendiente',processing:'q-processing">Procesando...',success:'q-success">Listo',error:'q-error">Error'};
+  return '<span class="q-badge '+m[i.status]+'</span>';
+}
+
+function removeQueueItem(id){batchQueue=batchQueue.filter(i=>i.id!==id);renderQueue()}
+function clearBatchQueue(){batchQueue=batchQueue.filter(i=>i.status==='success');renderQueue()}
+
+async function processBatchQueue(){
+  if(batchProcessing)return;
+  const pending=batchQueue.filter(i=>i.status==='pending');
+  if(!pending.length){showToast('No hay fotos pendientes');return}
+  batchProcessing=true;
+  $('btn-process').disabled=true;$('btn-process').textContent='Procesando...';
+  $('batch-progress').style.display='block';
+  let done=0;
+  for(const item of pending){
+    item.status='processing';renderQueue();
+    try{
+      const b64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(item.file)});
+      const resp=await fetch(OCR_URL,{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':OCR_KEY},body:JSON.stringify({image:b64,mimeType:item.file.type})});
+      if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err.error||'Error '+resp.status)}
+      const json=await resp.json();
+      item.status='success';item.data=json.data;
+      reviewedItems.push({id:item.id,thumb:item.thumb,name:item.name,data:json.data,saved:false});
+    }catch(err){item.status='error';item.error=err.message}
+    done++;
+    $('progress-fill').style.width=Math.round(done/pending.length*100)+'%';
+    $('progress-text').textContent=done+' / '+pending.length;
+    renderQueue();renderReview();
+    await new Promise(r=>setTimeout(r,500));
+  }
+  batchProcessing=false;
+  $('btn-process').disabled=false;$('btn-process').textContent='Procesar todo';
+  const ok=batchQueue.filter(i=>i.status==='success').length,fail=batchQueue.filter(i=>i.status==='error').length;
+  showToast(ok+' procesados'+(fail?' ('+fail+' errores)':''),'success');
+}
+
+function renderReview(){
+  const unsaved=reviewedItems.filter(i=>!i.saved);
+  const sec=$('review-section');
+  if(!unsaved.length){sec.style.display='none';return}
+  sec.style.display='block';
+  $('review-count').textContent=unsaved.length;
+  $('review-items').innerHTML=unsaved.map(i=>{
+    const d=i.data,p='r'+i.id+'-';
+    const conf=d.confianza?Math.round(d.confianza*100)+'%':'?';
+    return '<div class="review-card" id="rc-'+i.id+'"><div class="review-header"><img class="review-thumb" src="'+i.thumb+'" onclick="window.open(this.src)"><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.95rem">'+(d.nombre||'(sin nombre)')+'</div><div style="font-size:.75rem;color:var(--muted)">'+i.name+'</div></div><span class="review-conf">Confianza: '+conf+'</span></div>'+
+    '<div class="grid-3"><div class="field col-span-2"><label>Nombre</label><input id="'+p+'nombre" value="'+(d.nombre||'')+'"></div><div class="field"><label>DNI</label><input id="'+p+'dni" value="'+(d.dni||'')+'"></div><div class="field"><label>Telefono</label><input id="'+p+'tel" value="'+(d.tel||'')+'"></div><div class="field"><label>Fecha ingreso</label><input type="date" id="'+p+'fecha" value="'+(d.fecha||'')+'"></div><div class="field"><label>Fecha entrega</label><input type="date" id="'+p+'entrega" value="'+(d.entrega||'')+'"></div></div>'+
+    '<div class="grid-3"><div class="field"><label>Tipo</label><select id="'+p+'tipo"><option value="normal"'+(d.tipo==='pami'?'':' selected')+'>Normal</option><option value="pami"'+(d.tipo==='pami'?' selected':'')+'>PAMI</option></select></div><div class="field"><label>Medico</label><input id="'+p+'medico" value="'+(d.medico||'')+'"></div><div class="field"><label>Matricula</label><input id="'+p+'matricula" value="'+(d.matricula||'')+'"></div></div>'+
+    '<div class="sub-label">Graduacion Lejos</div><div class="eye-header"><span></span><span>Esf</span><span>Cil</span><span>Eje</span><span>Adi</span></div>'+
+    '<div class="eye-row"><span class="eye-label">OD</span><input id="'+p+'l-od-esf" value="'+(d.l?.od?.esf||'')+'"><input id="'+p+'l-od-cil" value="'+(d.l?.od?.cil||'')+'"><input id="'+p+'l-od-eje" value="'+(d.l?.od?.eje||'')+'"><input id="'+p+'l-od-adi" value="'+(d.l?.od?.adi||'')+'"></div>'+
+    '<div class="eye-row"><span class="eye-label">OI</span><input id="'+p+'l-oi-esf" value="'+(d.l?.oi?.esf||'')+'"><input id="'+p+'l-oi-cil" value="'+(d.l?.oi?.cil||'')+'"><input id="'+p+'l-oi-eje" value="'+(d.l?.oi?.eje||'')+'"><input id="'+p+'l-oi-adi" value="'+(d.l?.oi?.adi||'')+'"></div>'+
+    '<div class="grid-2"><div class="field"><label>Armazon lejos</label><input id="'+p+'l-armazon" value="'+(d.l?.armazon||'')+'"></div><div class="field"><label>Lentes lejos</label><input id="'+p+'l-lentes" value="'+(d.l?.lentes||'')+'"></div></div>'+
+    '<div class="sub-label">Graduacion Cerca</div><div class="eye-header"><span></span><span>Esf</span><span>Cil</span><span>Eje</span><span>Adi</span></div>'+
+    '<div class="eye-row"><span class="eye-label">OD</span><input id="'+p+'c-od-esf" value="'+(d.c?.od?.esf||'')+'"><input id="'+p+'c-od-cil" value="'+(d.c?.od?.cil||'')+'"><input id="'+p+'c-od-eje" value="'+(d.c?.od?.eje||'')+'"><input id="'+p+'c-od-adi" value="'+(d.c?.od?.adi||'')+'"></div>'+
+    '<div class="eye-row"><span class="eye-label">OI</span><input id="'+p+'c-oi-esf" value="'+(d.c?.oi?.esf||'')+'"><input id="'+p+'c-oi-cil" value="'+(d.c?.oi?.cil||'')+'"><input id="'+p+'c-oi-eje" value="'+(d.c?.oi?.eje||'')+'"><input id="'+p+'c-oi-adi" value="'+(d.c?.oi?.adi||'')+'"></div>'+
+    '<div class="grid-2"><div class="field"><label>Armazon cerca</label><input id="'+p+'c-armazon" value="'+(d.c?.armazon||'')+'"></div><div class="field"><label>Lentes cerca</label><input id="'+p+'c-lentes" value="'+(d.c?.lentes||'')+'"></div></div>'+
+    '<div class="grid-2" style="margin-top:1rem"><div class="field"><label>Tipo de lente</label><input id="'+p+'lente" value="'+(d.lente||'')+'"></div><div class="field"><label>Tratamiento</label><input id="'+p+'tratamiento" value="'+(d.tratamiento||'')+'"></div></div>'+
+    '<div class="field" style="margin-top:.5rem"><label>Observaciones</label><input id="'+p+'obs" value="'+(d.obs||'')+'"></div>'+
+    '<div class="check-row"><input type="checkbox" id="'+p+'conservar"'+(d.conservar?' checked':'')+'><label for="'+p+'conservar">Conservar lentes previos</label></div>'+
+    '<div class="fin-grid" style="margin-top:1rem"><div class="field"><label>Total $</label><input type="number" id="'+p+'total" value="'+(d.total||'')+'"></div><div class="field"><label>Sena $</label><input type="number" id="'+p+'senia" value="'+(d.senia||'')+'"></div><div class="field"><label>Resta $</label><input type="number" id="'+p+'resto" value="'+(d.resto||'')+'" readonly style="background:#f0ede8;font-weight:600"></div></div>'+
+    '<div class="review-actions"><button class="btn btn-outline btn-sm" onclick="discardReview('+i.id+')">Descartar</button><button class="btn btn-primary btn-sm" onclick="saveReview('+i.id+')">Guardar pedido</button></div></div>';
+  }).join('');
+}
+
+function collectReview(id){
+  const g=k=>{const el=$(('r'+id+'-'+k));return el?el.value:''};
+  const gc=k=>{const el=$(('r'+id+'-'+k));return el?el.checked:false};
+  return{id:Date.now(),ts:new Date().toISOString(),nombre:g('nombre').trim(),dni:g('dni').trim(),tel:g('tel').trim(),fecha:g('fecha'),entrega:g('entrega'),tipo:g('tipo'),medico:g('medico').trim(),matricula:g('matricula').trim(),fechaReceta:g('fechaReceta'),l:{od:{esf:g('l-od-esf'),cil:g('l-od-cil'),eje:g('l-od-eje'),adi:g('l-od-adi')},oi:{esf:g('l-oi-esf'),cil:g('l-oi-cil'),eje:g('l-oi-eje'),adi:g('l-oi-adi')},armazon:g('l-armazon').trim(),lentes:g('l-lentes').trim()},c:{od:{esf:g('c-od-esf'),cil:g('c-od-cil'),eje:g('c-od-eje'),adi:g('c-od-adi')},oi:{esf:g('c-oi-esf'),cil:g('c-oi-cil'),eje:g('c-oi-eje'),adi:g('c-oi-adi')},armazon:g('c-armazon').trim(),lentes:g('c-lentes').trim()},lente:g('lente').trim(),tratamiento:g('tratamiento').trim(),obs:g('obs').trim(),conservar:gc('conservar'),total:g('total'),senia:g('senia'),resto:g('resto')};
+}
+
+function saveReview(id){
+  const d=collectReview(id);
+  if(!d.nombre){showToast('El nombre es obligatorio');return}
+  const arr=getPedidos();arr.unshift(d);setPedidos(arr);syncToFirestore(d);
+  const item=reviewedItems.find(i=>i.id===id);if(item)item.saved=true;
+  renderReview();showToast('Pedido guardado','success');
+}
+
+function discardReview(id){
+  const item=reviewedItems.find(i=>i.id===id);if(item)item.saved=true;
+  renderReview();
+}
+
+function saveAllReviewed(){
+  const unsaved=reviewedItems.filter(i=>!i.saved);
+  if(!unsaved.length)return;
+  let saved=0;
+  for(const item of unsaved){
+    const d=collectReview(item.id);
+    if(!d.nombre)continue;
+    const arr=getPedidos();arr.unshift(d);setPedidos(arr);syncToFirestore(d);
+    item.saved=true;saved++;
+  }
+  renderReview();
+  if(saved)showToast(saved+' pedido'+(saved===1?'':'s')+' guardado'+(saved===1?'':'s'),'success');
+}
+
+window.showView=showView;window.calcResto=calcResto;window.guardarPedido=guardarPedido;window.limpiarForm=limpiarForm;window.imprimirPedido=imprimirPedido;window.imprimirDesdeHistorial=imprimirDesdeHistorial;window.eliminarPedido=eliminarPedido;window.cargarEnForm=cargarEnForm;window.renderHistorial=renderHistorial;window.loginGoogle=loginGoogle;window.logoutUser=logoutUser;window.handleBatchFiles=handleBatchFiles;window.removeQueueItem=removeQueueItem;window.clearBatchQueue=clearBatchQueue;window.processBatchQueue=processBatchQueue;window.saveReview=saveReview;window.discardReview=discardReview;window.saveAllReviewed=saveAllReviewed;window.updateCostCalc=updateCostCalc;
 </script>
 </body>
 </html>
