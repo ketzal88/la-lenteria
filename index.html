@@ -3,1433 +3,319 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>La Lenteria - Gestion de Pedidos</title>
+<title>La Lenter&iacute;a - Gesti&oacute;n de Pedidos</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-  :root {
-    --bg: #f5f2ee;
-    --surface: #fdfcfa;
-    --border: #e0dbd3;
-    --accent: #1a3a4a;
-    --accent2: #c8a96e;
-    --text: #1c1917;
-    --muted: #78716c;
-    --danger: #9b2c2c;
-    --success: #166534;
-    --radius: 4px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ─── LOGIN SCREEN ─── */
-  .login-screen {
-    position: fixed;
-    inset: 0;
-    background: var(--accent);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    gap: 2rem;
-  }
-  .login-screen.hidden { display: none; }
-  .login-brand {
-    text-align: center;
-    color: white;
-  }
-  .login-brand h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.5rem;
-    color: var(--accent2);
-    letter-spacing: .05em;
-  }
-  .login-brand h1 span { color: white; font-style: italic; }
-  .login-brand p {
-    color: rgba(255,255,255,.5);
-    font-size: .85rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-top: .5rem;
-  }
-  .btn-google {
-    display: inline-flex;
-    align-items: center;
-    gap: .75rem;
-    background: white;
-    color: #333;
-    border: none;
-    border-radius: var(--radius);
-    padding: .75rem 2rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: box-shadow .15s, transform .1s;
-    box-shadow: 0 2px 8px rgba(0,0,0,.2);
-  }
-  .btn-google:hover { box-shadow: 0 4px 16px rgba(0,0,0,.3); transform: translateY(-1px); }
-  .btn-google svg { width: 20px; height: 20px; }
-  .login-error {
-    color: #fca5a5;
-    font-size: .85rem;
-    max-width: 300px;
-    text-align: center;
-    min-height: 1.2em;
-  }
-
-  /* ─── HEADER ─── */
-  .app-header {
-    background: var(--accent);
-    color: white;
-    padding: 0 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,.15);
-  }
-  .app-header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.3rem;
-    letter-spacing: .03em;
-    color: var(--accent2);
-  }
-  .app-header h1 span { color: white; font-style: italic; }
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  /* ─── USER INFO ─── */
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: .6rem;
-  }
-  .user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid var(--accent2);
-  }
-  .user-name {
-    font-size: .8rem;
-    color: rgba(255,255,255,.8);
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .sync-indicator {
-    font-size: .75rem;
-    padding: .2rem .5rem;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: .3rem;
-  }
-  .sync-ok { background: rgba(22,101,52,.3); color: #86efac; }
-  .sync-pending { background: rgba(200,169,110,.3); color: var(--accent2); }
-  .sync-offline { background: rgba(155,44,44,.3); color: #fca5a5; }
-  .btn-logout {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,.2);
-    color: rgba(255,255,255,.6);
-    padding: .3rem .7rem;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .72rem;
-    font-weight: 500;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    transition: all .15s;
-  }
-  .btn-logout:hover { border-color: rgba(255,255,255,.5); color: white; }
-
-  /* ─── TABS ─── */
-  .tabs {
-    display: flex;
-    gap: .25rem;
-  }
-  .tab-btn {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,.2);
-    color: rgba(255,255,255,.7);
-    padding: .4rem 1.1rem;
-    border-radius: 2px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .82rem;
-    font-weight: 500;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    transition: all .15s;
-  }
-  .tab-btn:hover { background: rgba(255,255,255,.08); color: white; }
-  .tab-btn.active { background: var(--accent2); color: var(--accent); border-color: var(--accent2); }
-
-  /* ─── MAIN ─── */
-  .main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-  .view { display: none; }
-  .view.active { display: block; }
-
-  .app-content { display: none; }
-  .app-content.visible { display: block; }
-
-  /* ─── SECTION BLOCKS ─── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem 1.75rem;
-    margin-bottom: 1.25rem;
-  }
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1rem;
-    color: var(--accent);
-    margin-bottom: 1.25rem;
-    padding-bottom: .6rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .card-title .dot {
-    width: 6px; height: 6px;
-    background: var(--accent2);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* ─── GRID FORMS ─── */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem 1.25rem; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .9rem 1.25rem; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9rem 1.25rem; }
-  .col-span-2 { grid-column: span 2; }
-  .col-span-3 { grid-column: span 3; }
-  .col-span-4 { grid-column: span 4; }
-
-  .field { display: flex; flex-direction: column; gap: .3rem; }
-  .field label {
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .field input, .field select, .field textarea {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: .5rem .7rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .88rem;
-    color: var(--text);
-    transition: border-color .15s, box-shadow .15s;
-    width: 100%;
-  }
-  .field input:focus, .field select:focus, .field textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(26,58,74,.1);
-  }
-  .field select { appearance: none; cursor: pointer; }
-
-  /* Subtitulos dentro de card */
-  .sub-label {
-    font-size: .7rem;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin: .5rem 0 .8rem;
-    display: flex;
-    align-items: center;
-    gap: .4rem;
-  }
-  .sub-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* ─── EYE TABLE ─── */
-  .eye-header {
-    display: grid;
-    grid-template-columns: 90px 1fr 1fr 1fr 1fr;
-    gap: .5rem;
-    margin-bottom: .4rem;
-  }
-  .eye-row {
-    display: grid;
-    grid-template-columns: 90px 1fr 1fr 1fr 1fr;
-    gap: .5rem;
-    margin-bottom: .5rem;
-    align-items: center;
-  }
-  .eye-header span, .eye-label {
-    font-size: .7rem;
-    font-weight: 700;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
-  }
-  .eye-label { color: var(--accent); font-size: .75rem; }
-  .eye-row input {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: .45rem .5rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .88rem;
-    color: var(--text);
-    text-align: center;
-    width: 100%;
-    transition: border-color .15s;
-  }
-  .eye-row input:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(26,58,74,.1);
-  }
-
-  /* ─── FINANCIERO ─── */
-  .fin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .9rem; }
-  .fin-total { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--accent); }
-
-  /* ─── BOTONES ─── */
-  .btn {
-    display: inline-flex; align-items: center; gap: .4rem;
-    padding: .6rem 1.4rem;
-    border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: .82rem;
-    font-weight: 600;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: none;
-    transition: all .15s;
-  }
-  .btn-primary { background: var(--accent); color: white; }
-  .btn-primary:hover { background: #0f2535; }
-  .btn-gold { background: var(--accent2); color: var(--accent); }
-  .btn-gold:hover { background: #b8963e; }
-  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger { background: transparent; border: 1px solid #fca5a5; color: var(--danger); }
-  .btn-danger:hover { background: #fee2e2; }
-
-  .actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1.5rem; flex-wrap: wrap; }
-
-  /* ─── TOAST ─── */
-  .toast {
-    position: fixed; bottom: 2rem; right: 2rem;
-    background: var(--accent); color: white;
-    padding: .75rem 1.25rem;
-    border-radius: var(--radius);
-    font-size: .85rem;
-    font-weight: 500;
-    box-shadow: 0 8px 24px rgba(0,0,0,.2);
-    opacity: 0; pointer-events: none;
-    transform: translateY(8px);
-    transition: all .25s;
-    z-index: 999;
-  }
-  .toast.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .toast.success { background: #14532d; }
-
-  /* ─── HISTORIAL ─── */
-  .search-bar {
-    display: flex; gap: .6rem; margin-bottom: 1.25rem;
-  }
-  .search-bar input {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: .55rem .85rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .88rem;
-  }
-  .search-bar input:focus { outline: none; border-color: var(--accent); }
-
-  .records-list { display: flex; flex-direction: column; gap: .6rem; }
-  .record-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: border-color .15s;
-    cursor: default;
-  }
-  .record-item:hover { border-color: var(--accent2); }
-  .record-name { font-weight: 600; font-size: .95rem; }
-  .record-meta { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
-  .record-actions { display: flex; gap: .5rem; }
-
-  .empty-state {
-    text-align: center; padding: 3rem 1rem;
-    color: var(--muted); font-size: .9rem;
-  }
-  .empty-icon { font-size: 2.5rem; margin-bottom: .75rem; opacity: .4; }
-
-  /* ─── PRINT TEMPLATE ─── */
-  #print-area { display: none; }
-
-  @media print {
-    @page { size: 216mm 356mm; margin: 0; }
-
-    body > *:not(#print-area) { display: none !important; }
-    #print-area {
-      display: block !important;
-      width: 216mm;
-      min-height: 356mm;
-      font-family: 'DM Sans', Arial, sans-serif;
-      color: #000;
-      background: white;
-    }
-
-    .print-top {
-      height: 140mm;
-      padding: 10mm 14mm 8mm;
-      border-bottom: 1px dashed #999;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .print-cut-label {
-      position: absolute;
-      right: 3mm;
-      bottom: -3mm;
-      font-size: 6pt;
-      color: #999;
-      z-index: 1;
-    }
-    .print-bottom {
-      height: 140mm;
-      padding: 8mm 14mm 8mm;
-      border-bottom: 1px dashed #999;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .print-ticket {
-      height: 76mm;
-      padding: 6mm 14mm;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-    }
-    .print-ticket .print-cut-label {
-      top: -3mm;
-      bottom: auto;
-    }
-
-    .print-optica-name {
-      font-size: 22pt;
-      font-weight: 700;
-      letter-spacing: .05em;
-      color: #1a3a4a;
-      text-transform: uppercase;
-      margin-bottom: 2mm;
-    }
-    .print-optica-sub {
-      font-size: 8pt;
-      color: #666;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 6mm;
-    }
-    .print-divider {
-      height: 1px;
-      background: #1a3a4a;
-      margin-bottom: 5mm;
-    }
-
-    .print-patient-row {
-      display: flex; gap: 8mm; margin-bottom: 4mm; align-items: baseline;
-    }
-    .print-patient-name { font-size: 14pt; font-weight: 700; flex: 1; }
-    .print-patient-meta { font-size: 8pt; color: #444; }
-
-    .print-section-title {
-      font-size: 7pt;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: #1a3a4a;
-      margin: 4mm 0 2mm;
-      border-bottom: .5pt solid #ccc;
-      padding-bottom: 1mm;
-    }
-
-    .print-grad-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 8.5pt;
-      margin-bottom: 3mm;
-    }
-    .print-grad-table th {
-      background: #1a3a4a;
-      color: white;
-      padding: 1.5mm 2mm;
-      text-align: center;
-      font-size: 7pt;
-      letter-spacing: .06em;
-    }
-    .print-grad-table td {
-      border: .5pt solid #ddd;
-      padding: 1.5mm 2mm;
-      text-align: center;
-      font-size: 8.5pt;
-    }
-    .print-grad-table .eye-name {
-      font-weight: 700;
-      text-align: left;
-      background: #f5f2ee;
-    }
-
-    .print-extras-row {
-      display: flex; gap: 6mm; margin-bottom: 3mm;
-    }
-    .print-extra-block { flex: 1; }
-    .print-extra-label { font-size: 7pt; text-transform: uppercase; letter-spacing: .08em; color: #666; }
-    .print-extra-value { font-size: 9pt; font-weight: 600; }
-
-    .print-finance {
-      margin-top: auto;
-      border-top: 1pt solid #1a3a4a;
-      padding-top: 3mm;
-      display: flex; gap: 8mm; align-items: flex-end;
-    }
-    .print-finance-block { flex: 1; text-align: center; }
-    .print-finance-label { font-size: 7pt; text-transform: uppercase; letter-spacing: .07em; color: #666; }
-    .print-finance-value { font-size: 13pt; font-weight: 700; color: #1a3a4a; }
-    .print-finance-value.big { font-size: 16pt; }
-
-    .print-fecha {
-      margin-left: auto;
-      font-size: 8pt;
-      color: #666;
-      text-align: right;
-    }
-
-    /* Bottom half = copy para archivo */
-    .print-bottom .print-optica-name { font-size: 13pt; }
-    .print-bottom .print-section-title { margin-top: 3mm; }
-
-    /* Ticket */
-    .print-ticket .print-optica-name { font-size: 11pt; margin-bottom: 1mm; }
-    .print-ticket .print-divider { margin-bottom: 3mm; }
-    .print-ticket-row {
-      display: flex;
-      align-items: baseline;
-      gap: 6mm;
-      margin-bottom: 2mm;
-    }
-    .print-ticket-order {
-      font-size: 8pt;
-      color: #444;
-      letter-spacing: .05em;
-    }
-    .print-ticket-name {
-      font-size: 12pt;
-      font-weight: 700;
-      flex: 1;
-    }
-    .print-ticket-finance {
-      display: flex;
-      gap: 10mm;
-      margin-top: 3mm;
-      padding-top: 3mm;
-      border-top: .5pt solid #ccc;
-    }
-    .print-ticket-finance-block { text-align: center; flex: 1; }
-    .print-ticket-finance-label { font-size: 7pt; text-transform: uppercase; letter-spacing: .08em; color: #666; }
-    .print-ticket-finance-value { font-size: 14pt; font-weight: 700; color: #1a3a4a; }
-    .print-ticket-finance-value.highlight {
-      font-size: 18pt;
-      color: #1a3a4a;
-      border: 1.5pt solid #1a3a4a;
-      border-radius: 3px;
-      padding: 1mm 3mm;
-    }
-    .print-ticket-dates {
-      margin-top: 3mm;
-      font-size: 8pt;
-      color: #444;
-      text-align: center;
-    }
+  :root{--bg:#f5f2ee;--surface:#fdfcfa;--border:#e0dbd3;--accent:#1a3a4a;--accent2:#c8a96e;--text:#1c1917;--muted:#78716c;--danger:#9b2c2c;--success:#166534;--radius:4px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  .login-screen{position:fixed;inset:0;background:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:2rem}
+  .login-screen.hidden{display:none}
+  .login-brand{text-align:center;color:white}
+  .login-brand h1{font-family:'DM Serif Display',serif;font-size:2.5rem;color:var(--accent2);letter-spacing:.05em}
+  .login-brand h1 span{color:white;font-style:italic}
+  .login-brand p{color:rgba(255,255,255,.5);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.5rem}
+  .btn-google{display:inline-flex;align-items:center;gap:.75rem;background:white;color:#333;border:none;border-radius:var(--radius);padding:.75rem 2rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:box-shadow .15s,transform .1s;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+  .btn-google:hover{box-shadow:0 4px 16px rgba(0,0,0,.3);transform:translateY(-1px)}
+  .btn-google svg{width:20px;height:20px}
+  .login-error{color:#fca5a5;font-size:.85rem;max-width:300px;text-align:center;min-height:1.2em}
+  .app-header{background:var(--accent);color:white;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+  .app-header h1{font-family:'DM Serif Display',serif;font-size:1.3rem;letter-spacing:.03em;color:var(--accent2)}
+  .app-header h1 span{color:white;font-style:italic}
+  .header-right{display:flex;align-items:center;gap:1rem}
+  .user-info{display:flex;align-items:center;gap:.6rem}
+  .user-avatar{width:32px;height:32px;border-radius:50%;border:2px solid var(--accent2)}
+  .user-name{font-size:.8rem;color:rgba(255,255,255,.8);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sync-indicator{font-size:.75rem;padding:.2rem .5rem;border-radius:10px;display:flex;align-items:center;gap:.3rem}
+  .sync-ok{background:rgba(22,101,52,.3);color:#86efac}
+  .sync-pending{background:rgba(200,169,110,.3);color:var(--accent2)}
+  .sync-offline{background:rgba(155,44,44,.3);color:#fca5a5}
+  .btn-logout{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);padding:.3rem .7rem;border-radius:var(--radius);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;transition:all .15s}
+  .btn-logout:hover{border-color:rgba(255,255,255,.5);color:white}
+  .tabs{display:flex;gap:.25rem}
+  .tab-btn{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);padding:.4rem 1.1rem;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;transition:all .15s}
+  .tab-btn:hover{background:rgba(255,255,255,.08);color:white}
+  .tab-btn.active{background:var(--accent2);color:var(--accent);border-color:var(--accent2)}
+  .main{max-width:860px;margin:0 auto;padding:2rem 1.5rem 4rem}
+  .view{display:none}.view.active{display:block}
+  .app-content{display:none}.app-content.visible{display:block}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:1.25rem}
+  .card-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--accent);margin-bottom:1.25rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
+  .card-title .dot{width:6px;height:6px;background:var(--accent2);border-radius:50%;flex-shrink:0}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem 1.25rem}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem 1.25rem}
+  .col-span-2{grid-column:span 2}
+  .field{display:flex;flex-direction:column;gap:.3rem}
+  .field label{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .field input,.field select,.field textarea{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .7rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);transition:border-color .15s,box-shadow .15s;width:100%}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,58,74,.1)}
+  .field select{appearance:none;cursor:pointer}
+  .eye-header{display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr;gap:.5rem;margin-bottom:.4rem}
+  .eye-row{display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr;gap:.5rem;margin-bottom:.5rem;align-items:center}
+  .eye-header span,.eye-label{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:center}
+  .eye-label{color:var(--accent);font-size:.75rem}
+  .eye-row input{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.45rem .5rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);text-align:center;width:100%;transition:border-color .15s}
+  .eye-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,58,74,.1)}
+  .fin-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem}
+  .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.4rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border:none;transition:all .15s}
+  .btn-primary{background:var(--accent);color:white}.btn-primary:hover{background:#0f2535}
+  .btn-gold{background:var(--accent2);color:var(--accent)}.btn-gold:hover{background:#b8963e}
+  .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-danger{background:transparent;border:1px solid #fca5a5;color:var(--danger)}.btn-danger:hover{background:#fee2e2}
+  .actions{display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem;flex-wrap:wrap}
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--accent);color:white;padding:.75rem 1.25rem;border-radius:var(--radius);font-size:.85rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;pointer-events:none;transform:translateY(8px);transition:all .25s;z-index:999}
+  .toast.show{opacity:1;pointer-events:auto;transform:translateY(0)}.toast.success{background:#14532d}
+  .search-bar{display:flex;gap:.6rem;margin-bottom:1.25rem}
+  .search-bar input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.88rem}
+  .search-bar input:focus{outline:none;border-color:var(--accent)}
+  .records-list{display:flex;flex-direction:column;gap:.6rem}
+  .record-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;transition:border-color .15s;cursor:default}
+  .record-item:hover{border-color:var(--accent2)}
+  .record-name{font-weight:600;font-size:.95rem}
+  .record-meta{font-size:.78rem;color:var(--muted);margin-top:.15rem}
+  .record-actions{display:flex;gap:.5rem}
+  .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.9rem}
+  .empty-icon{font-size:2.5rem;margin-bottom:.75rem;opacity:.4}
+  .autocomplete-wrap{position:relative}
+  .autocomplete-list{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--accent);border-top:none;border-radius:0 0 var(--radius) var(--radius);max-height:180px;overflow-y:auto;z-index:50;display:none;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+  .autocomplete-list.visible{display:block}
+  .autocomplete-item{padding:.55rem .75rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border);transition:background .1s}
+  .autocomplete-item:last-child{border-bottom:none}
+  .autocomplete-item:hover{background:var(--bg)}
+  .autocomplete-item strong{color:var(--accent)}
+  .autocomplete-item .ac-meta{font-size:.75rem;color:var(--muted)}
+  .badge-pami{display:inline-block;background:#2563eb;color:white;font-size:.65rem;font-weight:700;letter-spacing:.06em;padding:.15rem .45rem;border-radius:3px;vertical-align:middle;margin-left:.4rem;text-transform:uppercase}
+  .check-row{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+  .check-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+  .check-row label{font-size:.85rem;font-weight:500;cursor:pointer;color:var(--text)}
+  #print-area{display:none}
+  @media print{
+    @page{size:216mm 356mm;margin:0}
+    body>*:not(#print-area){display:none !important}
+    #print-area{display:block !important;width:216mm;min-height:356mm;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white}
+    .print-top{height:140mm;padding:10mm 14mm 12mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
+    .print-cut-label{position:absolute;right:3mm;bottom:-3mm;font-size:6pt;color:#999;z-index:1}
+    .print-bottom{height:140mm;padding:12mm 14mm 12mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
+    .print-ticket{height:76mm;padding:6mm 14mm;display:flex;flex-direction:column;justify-content:center;position:relative}
+    .print-ticket .print-cut-label{top:-3mm;bottom:auto}
+    .print-optica-name{font-size:22pt;font-weight:700;letter-spacing:.05em;color:#1a3a4a;text-transform:uppercase;margin-bottom:1mm}
+    .print-optica-sub{font-size:7pt;color:#666;letter-spacing:.06em;margin-bottom:4mm}
+    .print-divider{height:1px;background:#1a3a4a;margin-bottom:4mm}
+    .print-patient-row{display:flex;gap:8mm;margin-bottom:3mm;align-items:baseline}
+    .print-patient-name{font-size:13pt;font-weight:700;flex:1}
+    .print-patient-meta{font-size:8pt;color:#444}
+    .print-medico-row{display:flex;gap:6mm;margin-bottom:3mm;font-size:8pt;color:#444}
+    .print-section-title{font-size:7pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1a3a4a;margin:3mm 0 1.5mm;border-bottom:.5pt solid #ccc;padding-bottom:1mm}
+    .print-grad-table{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:2mm}
+    .print-grad-table th{background:#1a3a4a;color:white;padding:1mm 2mm;text-align:center;font-size:6.5pt;letter-spacing:.06em}
+    .print-grad-table td{border:.5pt solid #ddd;padding:1mm 2mm;text-align:center;font-size:8pt}
+    .print-grad-table .eye-name{font-weight:700;text-align:left;background:#f5f2ee}
+    .print-extras-row{display:flex;gap:5mm;margin-bottom:2mm}
+    .print-extra-block{flex:1}
+    .print-extra-label{font-size:6.5pt;text-transform:uppercase;letter-spacing:.08em;color:#666}
+    .print-extra-value{font-size:8.5pt;font-weight:600}
+    .print-finance{margin-top:auto;border-top:1pt solid #1a3a4a;padding-top:2mm;display:flex;gap:8mm;align-items:flex-end}
+    .print-finance-block{flex:1;text-align:center}
+    .print-finance-label{font-size:6.5pt;text-transform:uppercase;letter-spacing:.07em;color:#666}
+    .print-finance-value{font-size:12pt;font-weight:700;color:#1a3a4a}
+    .print-finance-value.big{font-size:14pt}
+    .print-fecha{margin-left:auto;font-size:8pt;color:#666;text-align:right}
+    .print-bottom .print-optica-name{font-size:13pt}
+    .print-bottom .print-section-title{margin-top:2mm}
+    .print-ticket .print-optica-name{font-size:11pt;margin-bottom:1mm}
+    .print-ticket .print-divider{margin-bottom:3mm}
+    .print-ticket-row{display:flex;align-items:baseline;gap:6mm;margin-bottom:2mm}
+    .print-ticket-order{font-size:8pt;color:#444;letter-spacing:.05em}
+    .print-ticket-name{font-size:12pt;font-weight:700;flex:1}
+    .print-ticket-finance{display:flex;gap:10mm;margin-top:3mm;padding-top:3mm;border-top:.5pt solid #ccc}
+    .print-ticket-finance-block{text-align:center;flex:1}
+    .print-ticket-finance-label{font-size:7pt;text-transform:uppercase;letter-spacing:.08em;color:#666}
+    .print-ticket-finance-value{font-size:14pt;font-weight:700;color:#1a3a4a}
+    .print-ticket-finance-value.highlight{font-size:18pt;color:#1a3a4a;border:1.5pt solid #1a3a4a;border-radius:3px;padding:1mm 3mm}
+    .print-ticket-dates{margin-top:3mm;font-size:8pt;color:#444;text-align:center}
+    .print-ticket-leyenda{margin-top:3mm;font-size:6.5pt;color:#444;text-align:justify;line-height:1.4}
+    .print-leyenda-hidden{display:none !important}
   }
 </style>
 </head>
 <body>
-
-<!-- LOGIN SCREEN -->
 <div id="login-screen" class="login-screen">
-  <div class="login-brand">
-    <h1>La Lenteria</h1>
-    <p>Sistema de pedidos</p>
-  </div>
-  <button id="btn-login" class="btn-google" onclick="loginGoogle()">
+  <div class="login-brand"><h1>La Lenter&#237;a</h1><p>Sistema de pedidos</p></div>
+  <button class="btn-google" onclick="loginGoogle()">
     <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-    Iniciar sesion con Google
+    Iniciar sesi&#243;n con Google
   </button>
   <div id="login-error" class="login-error"></div>
 </div>
-
-<!-- APP CONTENT (hidden until auth) -->
 <div id="app-content" class="app-content">
-
 <header class="app-header">
-  <h1>La Lenteria</h1>
+  <h1>La Lenter&#237;a</h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="showView('nuevo')">Nuevo pedido</button>
     <button class="tab-btn" onclick="showView('historial')">Historial</button>
   </div>
   <div class="header-right">
     <div id="sync-status" class="sync-indicator sync-ok" title="Sincronizado">&#9729; Sync</div>
-    <div class="user-info">
-      <img id="user-avatar" class="user-avatar" src="" alt="">
-      <span id="user-name" class="user-name"></span>
-    </div>
+    <div class="user-info"><img id="user-avatar" class="user-avatar" src="" alt=""><span id="user-name" class="user-name"></span></div>
     <button class="btn-logout" onclick="logoutUser()">Salir</button>
   </div>
 </header>
-
 <main class="main">
-
-  <!-- ═══ NUEVO PEDIDO ═══ -->
   <div id="view-nuevo" class="view active">
-
-    <!-- Paciente -->
     <div class="card">
       <div class="card-title"><span class="dot"></span>Datos del paciente</div>
       <div class="grid-3">
-        <div class="field col-span-2">
-          <label>Nombre y apellido</label>
-          <input id="f-nombre" type="text" placeholder="Ej: Maria Gonzalez" autocomplete="off">
-        </div>
-        <div class="field">
-          <label>DNI</label>
-          <input id="f-dni" type="text" placeholder="12.345.678">
-        </div>
-        <div class="field">
-          <label>Telefono</label>
-          <input id="f-tel" type="text" placeholder="11 1234-5678">
-        </div>
-        <div class="field">
-          <label>Fecha</label>
-          <input id="f-fecha" type="date">
-        </div>
-        <div class="field">
-          <label>Fecha de entrega</label>
-          <input id="f-entrega" type="date">
-        </div>
+        <div class="field col-span-2 autocomplete-wrap"><label>Nombre y apellido</label><input id="f-nombre" type="text" placeholder="Ej: Mar&#237;a Gonz&#225;lez" autocomplete="off"><div id="ac-nombre" class="autocomplete-list"></div></div>
+        <div class="field autocomplete-wrap"><label>DNI</label><input id="f-dni" type="text" placeholder="12.345.678" autocomplete="off"><div id="ac-dni" class="autocomplete-list"></div></div>
+        <div class="field"><label>Tel&#233;fono</label><input id="f-tel" type="text" placeholder="11 1234-5678"></div>
+        <div class="field"><label>Fecha</label><input id="f-fecha" type="date"></div>
+        <div class="field"><label>Fecha de entrega</label><input id="f-entrega" type="date"></div>
       </div>
     </div>
-
-    <!-- Graduacion LEJOS -->
     <div class="card">
-      <div class="card-title"><span class="dot"></span>Graduacion - Lejos</div>
-      <div class="eye-header">
-        <span></span>
-        <span>Esferico</span>
-        <span>Cilindrico</span>
-        <span>Eje</span>
-        <span>Adicion</span>
-      </div>
-      <div class="eye-row">
-        <span class="eye-label">OD (derecho)</span>
-        <input id="l-od-esf" type="text" placeholder="–">
-        <input id="l-od-cil" type="text" placeholder="–">
-        <input id="l-od-eje" type="text" placeholder="–">
-        <input id="l-od-adi" type="text" placeholder="–">
-      </div>
-      <div class="eye-row">
-        <span class="eye-label">OI (izquierdo)</span>
-        <input id="l-oi-esf" type="text" placeholder="–">
-        <input id="l-oi-cil" type="text" placeholder="–">
-        <input id="l-oi-eje" type="text" placeholder="–">
-        <input id="l-oi-adi" type="text" placeholder="–">
-      </div>
+      <div class="card-title"><span class="dot"></span>Tipo de pedido</div>
+      <div class="grid-3"><div class="field"><label>Tipo</label><select id="f-tipo"><option value="normal">Normal</option><option value="pami">PAMI</option></select></div></div>
     </div>
-
-    <!-- Graduacion CERCA -->
     <div class="card">
-      <div class="card-title"><span class="dot"></span>Graduacion - Cerca</div>
-      <div class="eye-header">
-        <span></span>
-        <span>Esferico</span>
-        <span>Cilindrico</span>
-        <span>Eje</span>
-        <span>Adicion</span>
-      </div>
-      <div class="eye-row">
-        <span class="eye-label">OD (derecho)</span>
-        <input id="c-od-esf" type="text" placeholder="–">
-        <input id="c-od-cil" type="text" placeholder="–">
-        <input id="c-od-eje" type="text" placeholder="–">
-        <input id="c-od-adi" type="text" placeholder="–">
-      </div>
-      <div class="eye-row">
-        <span class="eye-label">OI (izquierdo)</span>
-        <input id="c-oi-esf" type="text" placeholder="–">
-        <input id="c-oi-cil" type="text" placeholder="–">
-        <input id="c-oi-eje" type="text" placeholder="–">
-        <input id="c-oi-adi" type="text" placeholder="–">
+      <div class="card-title"><span class="dot"></span>Datos del m&#233;dico</div>
+      <div class="grid-3">
+        <div class="field"><label>M&#233;dico</label><input id="f-medico" type="text" placeholder="Nombre del m&#233;dico"></div>
+        <div class="field"><label>Matr&#237;cula</label><input id="f-matricula" type="text" placeholder="Nro. matr&#237;cula"></div>
+        <div class="field"><label>Fecha de receta</label><input id="f-fecha-receta" type="date"></div>
       </div>
     </div>
-
-    <!-- Lente & Tratamiento -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Graduaci&#243;n - Lejos</div>
+      <div class="eye-header"><span></span><span>Esf&#233;rico</span><span>Cil&#237;ndrico</span><span>Eje</span><span>Adici&#243;n</span></div>
+      <div class="eye-row"><span class="eye-label">OD (derecho)</span><input id="l-od-esf" type="text" placeholder="&#8211;"><input id="l-od-cil" type="text" placeholder="&#8211;"><input id="l-od-eje" type="text" placeholder="&#8211;"><input id="l-od-adi" type="text" placeholder="&#8211;"></div>
+      <div class="eye-row"><span class="eye-label">OI (izquierdo)</span><input id="l-oi-esf" type="text" placeholder="&#8211;"><input id="l-oi-cil" type="text" placeholder="&#8211;"><input id="l-oi-eje" type="text" placeholder="&#8211;"><input id="l-oi-adi" type="text" placeholder="&#8211;"></div>
+      <div class="grid-2" style="margin-top:.8rem"><div class="field"><label>Armaz&#243;n</label><input id="l-armazon" type="text" placeholder="Armaz&#243;n lejos"></div><div class="field"><label>Lentes</label><input id="l-lentes" type="text" placeholder="Lentes lejos"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Graduaci&#243;n - Cerca</div>
+      <div class="eye-header"><span></span><span>Esf&#233;rico</span><span>Cil&#237;ndrico</span><span>Eje</span><span>Adici&#243;n</span></div>
+      <div class="eye-row"><span class="eye-label">OD (derecho)</span><input id="c-od-esf" type="text" placeholder="&#8211;"><input id="c-od-cil" type="text" placeholder="&#8211;"><input id="c-od-eje" type="text" placeholder="&#8211;"><input id="c-od-adi" type="text" placeholder="&#8211;"></div>
+      <div class="eye-row"><span class="eye-label">OI (izquierdo)</span><input id="c-oi-esf" type="text" placeholder="&#8211;"><input id="c-oi-cil" type="text" placeholder="&#8211;"><input id="c-oi-eje" type="text" placeholder="&#8211;"><input id="c-oi-adi" type="text" placeholder="&#8211;"></div>
+      <div class="grid-2" style="margin-top:.8rem"><div class="field"><label>Armaz&#243;n</label><input id="c-armazon" type="text" placeholder="Armaz&#243;n cerca"></div><div class="field"><label>Lentes</label><input id="c-lentes" type="text" placeholder="Lentes cerca"></div></div>
+    </div>
     <div class="card">
       <div class="card-title"><span class="dot"></span>Producto</div>
       <div class="grid-2">
-        <div class="field">
-          <label>Tipo de lente</label>
-          <input id="f-lente" type="text" placeholder="Ej: Monofocal, Progresivo, Bifocal...">
-        </div>
-        <div class="field">
-          <label>Tratamiento</label>
-          <input id="f-tratamiento" type="text" placeholder="Ej: AR, Fotocromatico, Blue...">
-        </div>
-        <div class="field col-span-2">
-          <label>Observaciones</label>
-          <input id="f-obs" type="text" placeholder="Aclaraciones adicionales">
-        </div>
+        <div class="field"><label>Tipo de lente</label><input id="f-lente" type="text" placeholder="Ej: Monofocal, Progresivo, Bifocal..."></div>
+        <div class="field"><label>Tratamiento</label><input id="f-tratamiento" type="text" placeholder="Ej: AR, Fotocrom&#225;tico, Blue..."></div>
+        <div class="field col-span-2"><label>Observaciones</label><input id="f-obs" type="text" placeholder="Aclaraciones adicionales"></div>
       </div>
+      <div class="check-row"><input type="checkbox" id="f-conservar"><label for="f-conservar">Conservar lentes previos</label></div>
     </div>
-
-    <!-- Financiero -->
     <div class="card">
       <div class="card-title"><span class="dot"></span>Importes</div>
       <div class="fin-grid">
-        <div class="field">
-          <label>Total $</label>
-          <input id="f-total" type="number" placeholder="0" oninput="calcResto()">
-        </div>
-        <div class="field">
-          <label>Sena $</label>
-          <input id="f-senia" type="number" placeholder="0" oninput="calcResto()">
-        </div>
-        <div class="field">
-          <label>Resta pagar $</label>
-          <input id="f-resto" type="number" placeholder="0" readonly style="background:#f0ede8; font-weight:600;">
-        </div>
+        <div class="field"><label>Total $</label><input id="f-total" type="number" placeholder="0" oninput="calcResto()"></div>
+        <div class="field"><label>Se&#241;a $</label><input id="f-senia" type="number" placeholder="0" oninput="calcResto()"></div>
+        <div class="field"><label>Resta pagar $</label><input id="f-resto" type="number" placeholder="0" readonly style="background:#f0ede8;font-weight:600;"></div>
       </div>
     </div>
-
     <div class="actions">
       <button class="btn btn-outline" onclick="limpiarForm()">Limpiar</button>
       <button class="btn btn-primary" onclick="guardarPedido()">Guardar pedido</button>
       <button class="btn btn-gold" onclick="imprimirPedido()">Imprimir sobre</button>
     </div>
-
   </div>
-
-  <!-- ═══ HISTORIAL ═══ -->
   <div id="view-historial" class="view">
-    <div class="card" style="margin-bottom:0; border-bottom:none; border-radius:4px 4px 0 0;">
-      <div class="search-bar">
-        <input id="h-search" type="text" placeholder="Buscar por nombre o DNI..." oninput="renderHistorial()">
-      </div>
-    </div>
-    <div id="records-container" class="records-list" style="background:var(--surface); border:1px solid var(--border); border-top:none; border-radius:0 0 4px 4px; padding:1rem 1.25rem;">
-    </div>
+    <div class="card" style="margin-bottom:0;border-bottom:none;border-radius:4px 4px 0 0;"><div class="search-bar"><input id="h-search" type="text" placeholder="Buscar por nombre o DNI..." oninput="renderHistorial()"></div></div>
+    <div id="records-container" class="records-list" style="background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;padding:1rem 1.25rem;"></div>
   </div>
-
 </main>
-</div><!-- /app-content -->
-
-<!-- PRINT AREA -->
+</div>
 <div id="print-area">
-  <!-- Seccion 1: Ficha completa -->
   <div class="print-top">
-    <div class="print-optica-name" id="p-optica">LA LENTERIA</div>
-    <div class="print-optica-sub">Sistema de pedidos</div>
+    <div class="print-optica-name">LA LENTER&#205;A</div>
+    <div class="print-optica-sub">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;|&nbsp; Tel: 11 2766-9650 &nbsp;|&nbsp; @lalenteria.optica</div>
     <div class="print-divider"></div>
-
-    <div class="print-patient-row">
-      <div class="print-patient-name" id="p-nombre">-</div>
-      <div class="print-patient-meta">Pedido N: <strong id="p-orden">-</strong></div>
-      <div class="print-patient-meta">DNI: <span id="p-dni">-</span></div>
-      <div class="print-patient-meta">Tel: <span id="p-tel">-</span></div>
-    </div>
-
-    <div class="print-section-title">Graduacion - Lejos</div>
-    <table class="print-grad-table">
-      <thead><tr>
-        <th style="text-align:left">Ojo</th>
-        <th>Esferico</th><th>Cilindrico</th><th>Eje</th><th>Adicion</th>
-      </tr></thead>
-      <tbody>
-        <tr>
-          <td class="eye-name">OD</td>
-          <td id="p-l-od-esf">-</td><td id="p-l-od-cil">-</td>
-          <td id="p-l-od-eje">-</td><td id="p-l-od-adi">-</td>
-        </tr>
-        <tr>
-          <td class="eye-name">OI</td>
-          <td id="p-l-oi-esf">-</td><td id="p-l-oi-cil">-</td>
-          <td id="p-l-oi-eje">-</td><td id="p-l-oi-adi">-</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="print-section-title">Graduacion - Cerca</div>
-    <table class="print-grad-table">
-      <thead><tr>
-        <th style="text-align:left">Ojo</th>
-        <th>Esferico</th><th>Cilindrico</th><th>Eje</th><th>Adicion</th>
-      </tr></thead>
-      <tbody>
-        <tr>
-          <td class="eye-name">OD</td>
-          <td id="p-c-od-esf">-</td><td id="p-c-od-cil">-</td>
-          <td id="p-c-od-eje">-</td><td id="p-c-od-adi">-</td>
-        </tr>
-        <tr>
-          <td class="eye-name">OI</td>
-          <td id="p-c-oi-esf">-</td><td id="p-c-oi-cil">-</td>
-          <td id="p-c-oi-eje">-</td><td id="p-c-oi-adi">-</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="print-extras-row">
-      <div class="print-extra-block">
-        <div class="print-extra-label">Tipo de lente</div>
-        <div class="print-extra-value" id="p-lente">-</div>
-      </div>
-      <div class="print-extra-block">
-        <div class="print-extra-label">Tratamiento</div>
-        <div class="print-extra-value" id="p-tratamiento">-</div>
-      </div>
-      <div class="print-extra-block">
-        <div class="print-extra-label">Observaciones</div>
-        <div class="print-extra-value" id="p-obs">-</div>
-      </div>
-    </div>
-
-    <div class="print-finance">
-      <div class="print-finance-block">
-        <div class="print-finance-label">Total</div>
-        <div class="print-finance-value big" id="p-total">$0</div>
-      </div>
-      <div class="print-finance-block">
-        <div class="print-finance-label">Sena</div>
-        <div class="print-finance-value" id="p-senia">$0</div>
-      </div>
-      <div class="print-finance-block">
-        <div class="print-finance-label">Resta pagar</div>
-        <div class="print-finance-value" id="p-resto">$0</div>
-      </div>
-      <div class="print-fecha">
-        Ingreso: <strong id="p-fecha">-</strong><br>
-        Entrega: <strong id="p-entrega">-</strong>
-      </div>
-    </div>
+    <div class="print-patient-row"><div class="print-patient-name" id="p-nombre">-</div><div class="print-patient-meta">Pedido N&#176;: <strong id="p-orden">-</strong></div><div class="print-patient-meta">DNI: <span id="p-dni">-</span></div><div class="print-patient-meta">Tel: <span id="p-tel">-</span></div></div>
+    <div class="print-medico-row"><span>M&#233;dico: <strong id="p-medico">-</strong></span><span>Mat: <strong id="p-matricula">-</strong></span><span>Fecha receta: <strong id="p-fecha-receta">-</strong></span></div>
+    <div class="print-section-title">Graduaci&#243;n - Lejos</div>
+    <table class="print-grad-table"><thead><tr><th style="text-align:left">Ojo</th><th>Esf&#233;rico</th><th>Cil&#237;ndrico</th><th>Eje</th><th>Adici&#243;n</th></tr></thead><tbody><tr><td class="eye-name">OD</td><td id="p-l-od-esf">-</td><td id="p-l-od-cil">-</td><td id="p-l-od-eje">-</td><td id="p-l-od-adi">-</td></tr><tr><td class="eye-name">OI</td><td id="p-l-oi-esf">-</td><td id="p-l-oi-cil">-</td><td id="p-l-oi-eje">-</td><td id="p-l-oi-adi">-</td></tr></tbody></table>
+    <div class="print-section-title">Graduaci&#243;n - Cerca</div>
+    <table class="print-grad-table"><thead><tr><th style="text-align:left">Ojo</th><th>Esf&#233;rico</th><th>Cil&#237;ndrico</th><th>Eje</th><th>Adici&#243;n</th></tr></thead><tbody><tr><td class="eye-name">OD</td><td id="p-c-od-esf">-</td><td id="p-c-od-cil">-</td><td id="p-c-od-eje">-</td><td id="p-c-od-adi">-</td></tr><tr><td class="eye-name">OI</td><td id="p-c-oi-esf">-</td><td id="p-c-oi-cil">-</td><td id="p-c-oi-eje">-</td><td id="p-c-oi-adi">-</td></tr></tbody></table>
+    <div class="print-extras-row"><div class="print-extra-block"><div class="print-extra-label">Tipo de lente</div><div class="print-extra-value" id="p-lente">-</div></div><div class="print-extra-block"><div class="print-extra-label">Tratamiento</div><div class="print-extra-value" id="p-tratamiento">-</div></div><div class="print-extra-block"><div class="print-extra-label">Armaz&#243;n L.</div><div class="print-extra-value" id="p-l-armazon">-</div></div><div class="print-extra-block"><div class="print-extra-label">Armaz&#243;n C.</div><div class="print-extra-value" id="p-c-armazon">-</div></div></div>
+    <div class="print-extras-row"><div class="print-extra-block"><div class="print-extra-label">Observaciones</div><div class="print-extra-value" id="p-obs">-</div></div><div class="print-extra-block"><div class="print-extra-label">Conserva lentes</div><div class="print-extra-value" id="p-conservar">-</div></div></div>
+    <div class="print-finance"><div class="print-finance-block"><div class="print-finance-label">Total</div><div class="print-finance-value big" id="p-total">$0</div></div><div class="print-finance-block"><div class="print-finance-label">Se&#241;a</div><div class="print-finance-value" id="p-senia">$0</div></div><div class="print-finance-block"><div class="print-finance-label">Resta pagar</div><div class="print-finance-value" id="p-resto">$0</div></div><div class="print-fecha">Ingreso: <strong id="p-fecha">-</strong><br>Entrega: <strong id="p-entrega">-</strong></div></div>
     <span class="print-cut-label">&#9986;</span>
   </div>
-
-  <!-- Seccion 2: Copia archivo -->
   <div class="print-bottom">
-    <div class="print-optica-name">LA LENTERIA</div>
+    <div class="print-optica-name">LA LENTER&#205;A</div>
+    <div class="print-optica-sub">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;|&nbsp; Tel: 11 2766-9650</div>
     <div class="print-divider"></div>
-    <div class="print-patient-row">
-      <div class="print-patient-name" id="p2-nombre">-</div>
-      <div class="print-patient-meta">Pedido N: <strong id="p2-orden">-</strong></div>
-      <div class="print-patient-meta">DNI: <span id="p2-dni">-</span></div>
-      <div class="print-patient-meta">Tel: <span id="p2-tel">-</span></div>
-    </div>
-
+    <div class="print-patient-row"><div class="print-patient-name" id="p2-nombre">-</div><div class="print-patient-meta">Pedido N&#176;: <strong id="p2-orden">-</strong></div><div class="print-patient-meta">DNI: <span id="p2-dni">-</span></div><div class="print-patient-meta">Tel: <span id="p2-tel">-</span></div></div>
+    <div class="print-medico-row"><span>M&#233;dico: <strong id="p2-medico">-</strong></span><span>Mat: <strong id="p2-matricula">-</strong></span><span>Receta: <strong id="p2-fecha-receta">-</strong></span></div>
     <div class="print-section-title">Lejos</div>
-    <table class="print-grad-table">
-      <thead><tr>
-        <th style="text-align:left">Ojo</th>
-        <th>Esferico</th><th>Cilindrico</th><th>Eje</th><th>Adicion</th>
-      </tr></thead>
-      <tbody>
-        <tr>
-          <td class="eye-name">OD</td>
-          <td id="p2-l-od-esf">-</td><td id="p2-l-od-cil">-</td>
-          <td id="p2-l-od-eje">-</td><td id="p2-l-od-adi">-</td>
-        </tr>
-        <tr>
-          <td class="eye-name">OI</td>
-          <td id="p2-l-oi-esf">-</td><td id="p2-l-oi-cil">-</td>
-          <td id="p2-l-oi-eje">-</td><td id="p2-l-oi-adi">-</td>
-        </tr>
-      </tbody>
-    </table>
-
+    <table class="print-grad-table"><thead><tr><th style="text-align:left">Ojo</th><th>Esf</th><th>Cil</th><th>Eje</th><th>Adi</th></tr></thead><tbody><tr><td class="eye-name">OD</td><td id="p2-l-od-esf">-</td><td id="p2-l-od-cil">-</td><td id="p2-l-od-eje">-</td><td id="p2-l-od-adi">-</td></tr><tr><td class="eye-name">OI</td><td id="p2-l-oi-esf">-</td><td id="p2-l-oi-cil">-</td><td id="p2-l-oi-eje">-</td><td id="p2-l-oi-adi">-</td></tr></tbody></table>
     <div class="print-section-title">Cerca</div>
-    <table class="print-grad-table">
-      <thead><tr>
-        <th style="text-align:left">Ojo</th>
-        <th>Esferico</th><th>Cilindrico</th><th>Eje</th><th>Adicion</th>
-      </tr></thead>
-      <tbody>
-        <tr>
-          <td class="eye-name">OD</td>
-          <td id="p2-c-od-esf">-</td><td id="p2-c-od-cil">-</td>
-          <td id="p2-c-od-eje">-</td><td id="p2-c-od-adi">-</td>
-        </tr>
-        <tr>
-          <td class="eye-name">OI</td>
-          <td id="p2-c-oi-esf">-</td><td id="p2-c-oi-cil">-</td>
-          <td id="p2-c-oi-eje">-</td><td id="p2-c-oi-adi">-</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="print-extras-row">
-      <div class="print-extra-block">
-        <div class="print-extra-label">Tipo de lente</div>
-        <div class="print-extra-value" id="p2-lente">-</div>
-      </div>
-      <div class="print-extra-block">
-        <div class="print-extra-label">Tratamiento</div>
-        <div class="print-extra-value" id="p2-tratamiento">-</div>
-      </div>
-    </div>
-
-    <div class="print-finance" style="margin-top:auto">
-      <div class="print-finance-block">
-        <div class="print-finance-label">Total</div>
-        <div class="print-finance-value big" id="p2-total">$0</div>
-      </div>
-      <div class="print-finance-block">
-        <div class="print-finance-label">Sena</div>
-        <div class="print-finance-value" id="p2-senia">$0</div>
-      </div>
-      <div class="print-finance-block">
-        <div class="print-finance-label">Resta</div>
-        <div class="print-finance-value" id="p2-resto">$0</div>
-      </div>
-      <div class="print-fecha">
-        Ingreso: <strong id="p2-fecha">-</strong><br>
-        Entrega: <strong id="p2-entrega">-</strong>
-      </div>
-    </div>
+    <table class="print-grad-table"><thead><tr><th style="text-align:left">Ojo</th><th>Esf</th><th>Cil</th><th>Eje</th><th>Adi</th></tr></thead><tbody><tr><td class="eye-name">OD</td><td id="p2-c-od-esf">-</td><td id="p2-c-od-cil">-</td><td id="p2-c-od-eje">-</td><td id="p2-c-od-adi">-</td></tr><tr><td class="eye-name">OI</td><td id="p2-c-oi-esf">-</td><td id="p2-c-oi-cil">-</td><td id="p2-c-oi-eje">-</td><td id="p2-c-oi-adi">-</td></tr></tbody></table>
+    <div class="print-extras-row"><div class="print-extra-block"><div class="print-extra-label">Lente</div><div class="print-extra-value" id="p2-lente">-</div></div><div class="print-extra-block"><div class="print-extra-label">Tratamiento</div><div class="print-extra-value" id="p2-tratamiento">-</div></div><div class="print-extra-block"><div class="print-extra-label">Arm. L.</div><div class="print-extra-value" id="p2-l-armazon">-</div></div><div class="print-extra-block"><div class="print-extra-label">Arm. C.</div><div class="print-extra-value" id="p2-c-armazon">-</div></div></div>
+    <div class="print-finance" style="margin-top:auto"><div class="print-finance-block"><div class="print-finance-label">Total</div><div class="print-finance-value big" id="p2-total">$0</div></div><div class="print-finance-block"><div class="print-finance-label">Se&#241;a</div><div class="print-finance-value" id="p2-senia">$0</div></div><div class="print-finance-block"><div class="print-finance-label">Resta</div><div class="print-finance-value" id="p2-resto">$0</div></div><div class="print-fecha">Ingreso: <strong id="p2-fecha">-</strong><br>Entrega: <strong id="p2-entrega">-</strong></div></div>
     <span class="print-cut-label">&#9986;</span>
   </div>
-
-  <!-- Seccion 3: Ticket recortable para el cliente -->
   <div class="print-ticket">
-    <div class="print-optica-name">LA LENTERIA</div>
+    <div class="print-optica-name">LA LENTER&#205;A</div>
+    <div class="print-optica-sub">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;|&nbsp; 11 2766-9650 &nbsp;|&nbsp; @lalenteria.optica</div>
     <div class="print-divider"></div>
-    <div class="print-ticket-row">
-      <span class="print-ticket-order">Pedido N: <strong id="pt-orden">-</strong></span>
-      <span class="print-ticket-name" id="pt-nombre">-</span>
-    </div>
-    <div class="print-ticket-finance">
-      <div class="print-ticket-finance-block">
-        <div class="print-ticket-finance-label">Total</div>
-        <div class="print-ticket-finance-value" id="pt-total">$0</div>
-      </div>
-      <div class="print-ticket-finance-block">
-        <div class="print-ticket-finance-label">Sena</div>
-        <div class="print-ticket-finance-value" id="pt-senia">$0</div>
-      </div>
-      <div class="print-ticket-finance-block">
-        <div class="print-ticket-finance-label">Resta pagar</div>
-        <div class="print-ticket-finance-value highlight" id="pt-resto">$0</div>
-      </div>
-    </div>
-    <div class="print-ticket-dates">
-      Ingreso: <strong id="pt-fecha">-</strong> &nbsp;&middot;&nbsp; Entrega: <strong id="pt-entrega">-</strong>
-    </div>
+    <div class="print-ticket-row"><span class="print-ticket-order">Pedido N&#176;: <strong id="pt-orden">-</strong></span><span class="print-ticket-name" id="pt-nombre">-</span></div>
+    <div class="print-ticket-finance"><div class="print-ticket-finance-block"><div class="print-ticket-finance-label">Total</div><div class="print-ticket-finance-value" id="pt-total">$0</div></div><div class="print-ticket-finance-block"><div class="print-ticket-finance-label">Se&#241;a</div><div class="print-ticket-finance-value" id="pt-senia">$0</div></div><div class="print-ticket-finance-block"><div class="print-ticket-finance-label">Resta pagar</div><div class="print-ticket-finance-value highlight" id="pt-resto">$0</div></div></div>
+    <div class="print-ticket-dates">Ingreso: <strong id="pt-fecha">-</strong> &nbsp;&middot;&nbsp; Entrega: <strong id="pt-entrega">-</strong></div>
+    <div id="pt-leyenda-normal" class="print-ticket-leyenda">NOTA: No se entrega sin este comprobante. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
+    <div id="pt-leyenda-pami" class="print-ticket-leyenda print-leyenda-hidden">NOTA: No se entrega sin este comprobante. Los trabajos se entregan &#250;nicamente con el DNI F&#205;SICO y el QR de la aplicaci&#243;n del afiliado. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
   </div>
 </div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
 <script type="module">
-// ─── FIREBASE IMPORTS ───
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-
-// ─── FIREBASE INIT ───
-const firebaseConfig = {
-  apiKey: "AIzaSyAxn1emM-y2iVZ2or94QY9juUq5Cza_dfA",
-  authDomain: "la-lenteria-ac3ff.firebaseapp.com",
-  projectId: "la-lenteria-ac3ff",
-  storageBucket: "la-lenteria-ac3ff.firebasestorage.app",
-  messagingSenderId: "280893742842",
-  appId: "1:280893742842:web:21d4714e3f602bf1607343",
-  measurementId: "G-8MK13B37SK"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
-
-let currentUid = null;
-
-// ─── UTILS ───
-const $ = id => document.getElementById(id);
-
-function showToast(msg, type = '') {
-  const t = $('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type ? ' ' + type : '');
-  setTimeout(() => t.className = 'toast', 2600);
-}
-
-function showView(v) {
-  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  $('view-' + v).classList.add('active');
-  const tabs = document.querySelectorAll('.tab-btn');
-  if (v === 'nuevo') tabs[0]?.classList.add('active');
-  else tabs[1]?.classList.add('active');
-  if (v === 'historial') renderHistorial();
-}
-
-function calcResto() {
-  const total = parseFloat($('f-total').value) || 0;
-  const senia = parseFloat($('f-senia').value) || 0;
-  $('f-resto').value = (total - senia).toFixed(2);
-}
-
-function fmtMoney(v) {
-  if (!v && v !== 0) return '-';
-  return '$' + parseFloat(v).toLocaleString('es-AR', { minimumFractionDigits: 0 });
-}
-
-function fmtDate(d) {
-  if (!d) return '-';
-  const [y, m, di] = d.split('-');
-  return `${di}/${m}/${y}`;
-}
-
-function val(id) { return $(id)?.value?.trim() || '-'; }
-
-// ─── STORAGE (localStorage = fuente primaria, offline-first) ───
-function getPedidos() {
-  try { return JSON.parse(localStorage.getItem('optica_pedidos') || '[]'); } catch { return []; }
-}
-function setPedidos(arr) { localStorage.setItem('optica_pedidos', JSON.stringify(arr)); }
-
-// ─── SYNC QUEUE (operaciones pendientes para Firestore) ───
-function getSyncQueue() {
-  try { return JSON.parse(localStorage.getItem('optica_sync_queue') || '[]'); } catch { return []; }
-}
-function setSyncQueue(q) { localStorage.setItem('optica_sync_queue', JSON.stringify(q)); }
-
-function updateSyncUI(status) {
-  const el = $('sync-status');
-  if (!el) return;
-  el.className = 'sync-indicator';
-  if (status === 'ok') { el.classList.add('sync-ok'); el.innerHTML = '&#9729; Sync'; el.title = 'Sincronizado'; }
-  else if (status === 'pending') { el.classList.add('sync-pending'); el.innerHTML = '&#9729; Pendiente'; el.title = 'Hay cambios sin sincronizar'; }
-  else { el.classList.add('sync-offline'); el.innerHTML = '&#9729; Offline'; el.title = 'Sin conexion'; }
-}
-
-// ─── FIRESTORE SYNC ───
-function pedidosRef() {
-  return collection(db, 'users', currentUid, 'pedidos');
-}
-
-async function syncToFirestore(pedido) {
-  if (!currentUid || !navigator.onLine) {
-    enqueueSyncOp({ type: 'set', pedido });
-    updateSyncUI('pending');
-    return;
-  }
-  try {
-    await setDoc(doc(db, 'users', currentUid, 'pedidos', String(pedido.id)), pedido);
-    updateSyncUI('ok');
-  } catch (e) {
-    console.warn('Sync set failed, enqueuing:', e);
-    enqueueSyncOp({ type: 'set', pedido });
-    updateSyncUI('pending');
-  }
-}
-
-async function syncDeleteFromFirestore(id) {
-  if (!currentUid || !navigator.onLine) {
-    enqueueSyncOp({ type: 'delete', id });
-    updateSyncUI('pending');
-    return;
-  }
-  try {
-    await deleteDoc(doc(db, 'users', currentUid, 'pedidos', String(id)));
-    updateSyncUI('ok');
-  } catch (e) {
-    console.warn('Sync delete failed, enqueuing:', e);
-    enqueueSyncOp({ type: 'delete', id });
-    updateSyncUI('pending');
-  }
-}
-
-function enqueueSyncOp(op) {
-  const q = getSyncQueue();
-  q.push(op);
-  setSyncQueue(q);
-}
-
-async function processSyncQueue() {
-  if (!currentUid || !navigator.onLine) return;
-  const q = getSyncQueue();
-  if (!q.length) return;
-  setSyncQueue([]);
-  for (const op of q) {
-    try {
-      if (op.type === 'set') {
-        await setDoc(doc(db, 'users', currentUid, 'pedidos', String(op.pedido.id)), op.pedido);
-      } else if (op.type === 'delete') {
-        await deleteDoc(doc(db, 'users', currentUid, 'pedidos', String(op.id)));
-      }
-    } catch (e) {
-      console.warn('Queue op failed, re-enqueuing:', e);
-      enqueueSyncOp(op);
-    }
-  }
-  const remaining = getSyncQueue();
-  updateSyncUI(remaining.length ? 'pending' : 'ok');
-}
-
-async function mergeFromFirestore() {
-  if (!currentUid || !navigator.onLine) return;
-  try {
-    const snapshot = await getDocs(pedidosRef());
-    const remotePedidos = [];
-    snapshot.forEach(d => remotePedidos.push(d.data()));
-
-    const localPedidos = getPedidos();
-    const localIds = new Set(localPedidos.map(p => p.id));
-    const remoteIds = new Set(remotePedidos.map(p => p.id));
-
-    // Agregar al local los que estan en remoto pero no en local
-    let added = 0;
-    for (const rp of remotePedidos) {
-      if (!localIds.has(rp.id)) {
-        localPedidos.push(rp);
-        added++;
-      }
-    }
-    // Ordenar por id descendente (mas reciente primero)
-    localPedidos.sort((a, b) => b.id - a.id);
-    setPedidos(localPedidos);
-
-    // Subir al remoto los que estan en local pero no en remoto
-    const toUpload = localPedidos.filter(p => !remoteIds.has(p.id));
-    if (toUpload.length) {
-      const batch = writeBatch(db);
-      for (const p of toUpload) {
-        batch.set(doc(db, 'users', currentUid, 'pedidos', String(p.id)), p);
-      }
-      await batch.commit();
-    }
-
-    await processSyncQueue();
-
-    if (added > 0 || toUpload.length > 0) {
-      showToast(`Sincronizado: ${added} bajados, ${toUpload.length} subidos`, 'success');
-    }
-    updateSyncUI('ok');
-  } catch (e) {
-    console.warn('Merge failed:', e);
-    updateSyncUI(navigator.onLine ? 'pending' : 'offline');
-  }
-}
-
-// ─── RECOLECTAR FORM ───
-function recolectarDatos() {
-  return {
-    id: Date.now(),
-    ts: new Date().toISOString(),
-    nombre: $('f-nombre').value.trim(),
-    dni: $('f-dni').value.trim(),
-    tel: $('f-tel').value.trim(),
-    fecha: $('f-fecha').value,
-    entrega: $('f-entrega').value,
-    l: {
-      od: { esf: $('l-od-esf').value, cil: $('l-od-cil').value, eje: $('l-od-eje').value, adi: $('l-od-adi').value },
-      oi: { esf: $('l-oi-esf').value, cil: $('l-oi-cil').value, eje: $('l-oi-eje').value, adi: $('l-oi-adi').value },
-    },
-    c: {
-      od: { esf: $('c-od-esf').value, cil: $('c-od-cil').value, eje: $('c-od-eje').value, adi: $('c-od-adi').value },
-      oi: { esf: $('c-oi-esf').value, cil: $('c-oi-cil').value, eje: $('c-oi-eje').value, adi: $('c-oi-adi').value },
-    },
-    lente: $('f-lente').value.trim(),
-    tratamiento: $('f-tratamiento').value.trim(),
-    obs: $('f-obs').value.trim(),
-    total: $('f-total').value,
-    senia: $('f-senia').value,
-    resto: $('f-resto').value,
-  };
-}
-
-// ─── GUARDAR ───
-function guardarPedido() {
-  const d = recolectarDatos();
-  if (!d.nombre) { showToast('Ingresa el nombre del paciente'); return; }
-  const arr = getPedidos();
-  arr.unshift(d);
-  setPedidos(arr);
-  showToast('Pedido guardado', 'success');
-  syncToFirestore(d);
-}
-
-// ─── LIMPIAR ───
-function limpiarForm() {
-  const ids = ['f-nombre','f-dni','f-tel','f-fecha','f-entrega',
-    'l-od-esf','l-od-cil','l-od-eje','l-od-adi',
-    'l-oi-esf','l-oi-cil','l-oi-eje','l-oi-adi',
-    'c-od-esf','c-od-cil','c-od-eje','c-od-adi',
-    'c-oi-esf','c-oi-cil','c-oi-eje','c-oi-adi',
-    'f-lente','f-tratamiento','f-obs','f-total','f-senia','f-resto'];
-  ids.forEach(id => { const el = $(id); if (el) el.value = ''; });
-}
-
-// ─── LLENAR PRINT ───
-function llenarPrint(d) {
-  const set = (id, v) => { const el = $(id); if (el) el.textContent = v || '-'; };
-
-  // TOP
-  set('p-orden', String(d.id).slice(-6));
-  set('p-nombre', d.nombre);
-  set('p-dni', d.dni);
-  set('p-tel', d.tel);
-  set('p-fecha', fmtDate(d.fecha));
-  set('p-entrega', fmtDate(d.entrega));
-
-  set('p-l-od-esf', d.l.od.esf); set('p-l-od-cil', d.l.od.cil);
-  set('p-l-od-eje', d.l.od.eje); set('p-l-od-adi', d.l.od.adi);
-  set('p-l-oi-esf', d.l.oi.esf); set('p-l-oi-cil', d.l.oi.cil);
-  set('p-l-oi-eje', d.l.oi.eje); set('p-l-oi-adi', d.l.oi.adi);
-
-  set('p-c-od-esf', d.c.od.esf); set('p-c-od-cil', d.c.od.cil);
-  set('p-c-od-eje', d.c.od.eje); set('p-c-od-adi', d.c.od.adi);
-  set('p-c-oi-esf', d.c.oi.esf); set('p-c-oi-cil', d.c.oi.cil);
-  set('p-c-oi-eje', d.c.oi.eje); set('p-c-oi-adi', d.c.oi.adi);
-
-  set('p-lente', d.lente); set('p-tratamiento', d.tratamiento); set('p-obs', d.obs);
-  set('p-total', fmtMoney(d.total));
-  set('p-senia', fmtMoney(d.senia));
-  set('p-resto', fmtMoney(d.resto));
-
-  // BOTTOM (copia)
-  set('p2-orden', String(d.id).slice(-6));
-  set('p2-nombre', d.nombre);
-  set('p2-dni', d.dni);
-  set('p2-tel', d.tel);
-  set('p2-fecha', fmtDate(d.fecha));
-  set('p2-entrega', fmtDate(d.entrega));
-
-  set('p2-l-od-esf', d.l.od.esf); set('p2-l-od-cil', d.l.od.cil);
-  set('p2-l-od-eje', d.l.od.eje); set('p2-l-od-adi', d.l.od.adi);
-  set('p2-l-oi-esf', d.l.oi.esf); set('p2-l-oi-cil', d.l.oi.cil);
-  set('p2-l-oi-eje', d.l.oi.eje); set('p2-l-oi-adi', d.l.oi.adi);
-
-  set('p2-c-od-esf', d.c.od.esf); set('p2-c-od-cil', d.c.od.cil);
-  set('p2-c-od-eje', d.c.od.eje); set('p2-c-od-adi', d.c.od.adi);
-  set('p2-c-oi-esf', d.c.oi.esf); set('p2-c-oi-cil', d.c.oi.cil);
-  set('p2-c-oi-eje', d.c.oi.eje); set('p2-c-oi-adi', d.c.oi.adi);
-
-  set('p2-lente', d.lente); set('p2-tratamiento', d.tratamiento);
-  set('p2-total', fmtMoney(d.total));
-  set('p2-senia', fmtMoney(d.senia));
-  set('p2-resto', fmtMoney(d.resto));
-
-  // TICKET
-  set('pt-orden', String(d.id).slice(-6));
-  set('pt-nombre', d.nombre);
-  set('pt-total', fmtMoney(d.total));
-  set('pt-senia', fmtMoney(d.senia));
-  set('pt-resto', fmtMoney(d.resto));
-  set('pt-fecha', fmtDate(d.fecha));
-  set('pt-entrega', fmtDate(d.entrega));
-}
-
-// ─── IMPRIMIR desde formulario ───
-function imprimirPedido() {
-  const d = recolectarDatos();
-  if (!d.nombre) { showToast('Ingresa el nombre del paciente'); return; }
-  llenarPrint(d);
-  setTimeout(() => window.print(), 100);
-}
-
-// ─── IMPRIMIR desde historial ───
-function imprimirDesdeHistorial(id) {
-  const arr = getPedidos();
-  const d = arr.find(p => p.id === id);
-  if (!d) return;
-  llenarPrint(d);
-  setTimeout(() => window.print(), 100);
-}
-
-// ─── ELIMINAR ───
-function eliminarPedido(id) {
-  if (!confirm('Eliminar este pedido del historial?')) return;
-  const arr = getPedidos().filter(p => p.id !== id);
-  setPedidos(arr);
-  renderHistorial();
-  showToast('Pedido eliminado');
-  syncDeleteFromFirestore(id);
-}
-
-// ─── CARGAR en formulario ───
-function cargarEnForm(id) {
-  const arr = getPedidos();
-  const d = arr.find(p => p.id === id);
-  if (!d) return;
-
-  $('f-nombre').value = d.nombre || '';
-  $('f-dni').value = d.dni || '';
-  $('f-tel').value = d.tel || '';
-  $('f-fecha').value = d.fecha || '';
-  $('f-entrega').value = d.entrega || '';
-
-  $('l-od-esf').value = d.l.od.esf || ''; $('l-od-cil').value = d.l.od.cil || '';
-  $('l-od-eje').value = d.l.od.eje || ''; $('l-od-adi').value = d.l.od.adi || '';
-  $('l-oi-esf').value = d.l.oi.esf || ''; $('l-oi-cil').value = d.l.oi.cil || '';
-  $('l-oi-eje').value = d.l.oi.eje || ''; $('l-oi-adi').value = d.l.oi.adi || '';
-
-  $('c-od-esf').value = d.c.od.esf || ''; $('c-od-cil').value = d.c.od.cil || '';
-  $('c-od-eje').value = d.c.od.eje || ''; $('c-od-adi').value = d.c.od.adi || '';
-  $('c-oi-esf').value = d.c.oi.esf || ''; $('c-oi-cil').value = d.c.oi.cil || '';
-  $('c-oi-eje').value = d.c.oi.eje || ''; $('c-oi-adi').value = d.c.oi.adi || '';
-
-  $('f-lente').value = d.lente || '';
-  $('f-tratamiento').value = d.tratamiento || '';
-  $('f-obs').value = d.obs || '';
-  $('f-total').value = d.total || '';
-  $('f-senia').value = d.senia || '';
-  $('f-resto').value = d.resto || '';
-
-  // switch to nuevo
-  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  $('view-nuevo').classList.add('active');
-  document.querySelectorAll('.tab-btn')[0].classList.add('active');
-  showToast('Pedido cargado en formulario', 'success');
-}
-
-// ─── RENDER HISTORIAL ───
-function renderHistorial() {
-  const q = ($('h-search')?.value || '').toLowerCase();
-  const arr = getPedidos().filter(p =>
-    !q ||
-    (p.nombre || '').toLowerCase().includes(q) ||
-    (p.dni || '').includes(q)
-  );
-  const cont = $('records-container');
-
-  if (!arr.length) {
-    cont.innerHTML = `<div class="empty-state"><div class="empty-icon">&#128203;</div>${q ? 'Sin resultados para "' + q + '"' : 'Todavia no hay pedidos guardados.'}</div>`;
-    return;
-  }
-
-  cont.innerHTML = arr.map(p => `
-    <div class="record-item">
-      <div>
-        <div class="record-name">${p.nombre || '-'}</div>
-        <div class="record-meta">
-          DNI: ${p.dni || '-'} &middot; Tel: ${p.tel || '-'} &middot;
-          ${p.fecha ? fmtDate(p.fecha) : '-'}
-          ${p.lente ? '&middot; ' + p.lente : ''}
-          ${p.total ? '&middot; Total: ' + fmtMoney(p.total) : ''}
-        </div>
-      </div>
-      <div class="record-actions">
-        <button class="btn btn-outline" onclick="cargarEnForm(${p.id})" title="Cargar en formulario">&#9998;</button>
-        <button class="btn btn-gold" onclick="imprimirDesdeHistorial(${p.id})" title="Reimprimir">&#128424;</button>
-        <button class="btn btn-danger" onclick="eliminarPedido(${p.id})" title="Eliminar">&#128465;</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ─── AUTH ───
-async function loginGoogle() {
-  try {
-    $('login-error').textContent = '';
-    await signInWithPopup(auth, googleProvider);
-  } catch (e) {
-    console.error('Login error:', e);
-    $('login-error').textContent = 'Error al iniciar sesion. Intenta de nuevo.';
-  }
-}
-
-async function logoutUser() {
-  try {
-    await signOut(auth);
-  } catch (e) {
-    console.error('Logout error:', e);
-  }
-}
-
-function initApp() {
-  const hoy = new Date().toISOString().split('T')[0];
-  $('f-fecha').value = hoy;
-  updateSyncUI(navigator.onLine ? 'ok' : 'offline');
-}
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUid = user.uid;
-    $('login-screen').classList.add('hidden');
-    $('app-content').classList.add('visible');
-    $('user-avatar').src = user.photoURL || '';
-    $('user-name').textContent = user.displayName || user.email || '';
-    initApp();
-    await mergeFromFirestore();
-  } else {
-    currentUid = null;
-    $('login-screen').classList.remove('hidden');
-    $('app-content').classList.remove('visible');
-  }
-});
-
-// ─── ONLINE/OFFLINE LISTENERS ───
-window.addEventListener('online', () => {
-  updateSyncUI('pending');
-  processSyncQueue().then(() => mergeFromFirestore());
-});
-window.addEventListener('offline', () => updateSyncUI('offline'));
-
-// ─── EXPOSE TO GLOBAL (needed for onclick in HTML with type=module) ───
-window.showView = showView;
-window.calcResto = calcResto;
-window.guardarPedido = guardarPedido;
-window.limpiarForm = limpiarForm;
-window.imprimirPedido = imprimirPedido;
-window.imprimirDesdeHistorial = imprimirDesdeHistorial;
-window.eliminarPedido = eliminarPedido;
-window.cargarEnForm = cargarEnForm;
-window.renderHistorial = renderHistorial;
-window.loginGoogle = loginGoogle;
-window.logoutUser = logoutUser;
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+import{getAuth,signInWithRedirect,getRedirectResult,signOut,onAuthStateChanged,GoogleAuthProvider}from"https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import{getFirestore,collection,doc,setDoc,getDocs,deleteDoc,writeBatch}from"https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyAxn1emM-y2iVZ2or94QY9juUq5Cza_dfA",authDomain:"la-lenteria-ac3ff.firebaseapp.com",projectId:"la-lenteria-ac3ff",storageBucket:"la-lenteria-ac3ff.firebasestorage.app",messagingSenderId:"280893742842",appId:"1:280893742842:web:21d4714e3f602bf1607343",measurementId:"G-8MK13B37SK"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),googleProvider=new GoogleAuthProvider();
+let currentUid=null;
+const $=id=>document.getElementById(id);
+function showToast(msg,type=''){const t=$('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>t.className='toast',2600)}
+function showView(v){document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));$('view-'+v).classList.add('active');const tabs=document.querySelectorAll('.tab-btn');if(v==='nuevo')tabs[0]?.classList.add('active');else tabs[1]?.classList.add('active');if(v==='historial')renderHistorial()}
+function calcResto(){const t=parseFloat($('f-total').value)||0,s=parseFloat($('f-senia').value)||0;$('f-resto').value=(t-s).toFixed(2)}
+function fmtMoney(v){if(!v&&v!==0)return'-';return'$'+parseFloat(v).toLocaleString('es-AR',{minimumFractionDigits:0})}
+function fmtDate(d){if(!d)return'-';const[y,m,di]=d.split('-');return di+'/'+m+'/'+y}
+function getPedidos(){try{return JSON.parse(localStorage.getItem('optica_pedidos')||'[]')}catch{return[]}}
+function setPedidos(arr){localStorage.setItem('optica_pedidos',JSON.stringify(arr))}
+function getSyncQueue(){try{return JSON.parse(localStorage.getItem('optica_sync_queue')||'[]')}catch{return[]}}
+function setSyncQueue(q){localStorage.setItem('optica_sync_queue',JSON.stringify(q))}
+function updateSyncUI(status){const el=$('sync-status');if(!el)return;el.className='sync-indicator';if(status==='ok'){el.classList.add('sync-ok');el.innerHTML='&#9729; Sync';el.title='Sincronizado'}else if(status==='pending'){el.classList.add('sync-pending');el.innerHTML='&#9729; Pendiente';el.title='Hay cambios sin sincronizar'}else{el.classList.add('sync-offline');el.innerHTML='&#9729; Offline';el.title='Sin conexi\u00f3n'}}
+function pedidosRef(){return collection(db,'users',currentUid,'pedidos')}
+async function syncToFirestore(pedido){if(!currentUid||!navigator.onLine){enqueueSyncOp({type:'set',pedido});updateSyncUI('pending');return}try{await setDoc(doc(db,'users',currentUid,'pedidos',String(pedido.id)),pedido);updateSyncUI('ok')}catch(e){console.warn('Sync set failed:',e);enqueueSyncOp({type:'set',pedido});updateSyncUI('pending')}}
+async function syncDeleteFromFirestore(id){if(!currentUid||!navigator.onLine){enqueueSyncOp({type:'delete',id});updateSyncUI('pending');return}try{await deleteDoc(doc(db,'users',currentUid,'pedidos',String(id)));updateSyncUI('ok')}catch(e){console.warn('Sync delete failed:',e);enqueueSyncOp({type:'delete',id});updateSyncUI('pending')}}
+function enqueueSyncOp(op){const q=getSyncQueue();q.push(op);setSyncQueue(q)}
+async function processSyncQueue(){if(!currentUid||!navigator.onLine)return;const q=getSyncQueue();if(!q.length)return;setSyncQueue([]);for(const op of q){try{if(op.type==='set')await setDoc(doc(db,'users',currentUid,'pedidos',String(op.pedido.id)),op.pedido);else if(op.type==='delete')await deleteDoc(doc(db,'users',currentUid,'pedidos',String(op.id)))}catch(e){console.warn('Queue op failed:',e);enqueueSyncOp(op)}}updateSyncUI(getSyncQueue().length?'pending':'ok')}
+async function mergeFromFirestore(){if(!currentUid||!navigator.onLine)return;try{const snapshot=await getDocs(pedidosRef());const remotePedidos=[];snapshot.forEach(d=>remotePedidos.push(d.data()));const localPedidos=getPedidos();const localIds=new Set(localPedidos.map(p=>p.id));const remoteIds=new Set(remotePedidos.map(p=>p.id));let added=0;for(const rp of remotePedidos){if(!localIds.has(rp.id)){localPedidos.push(rp);added++}}localPedidos.sort((a,b)=>b.id-a.id);setPedidos(localPedidos);const toUpload=localPedidos.filter(p=>!remoteIds.has(p.id));if(toUpload.length){const batch=writeBatch(db);for(const p of toUpload)batch.set(doc(db,'users',currentUid,'pedidos',String(p.id)),p);await batch.commit()}await processSyncQueue();if(added>0||toUpload.length>0)showToast('Sincronizado: '+added+' bajados, '+toUpload.length+' subidos','success');updateSyncUI('ok')}catch(e){console.warn('Merge failed:',e);updateSyncUI(navigator.onLine?'pending':'offline')}}
+function buscarClientes(query,campo){if(!query||query.length<2)return[];const pedidos=getPedidos();const q=query.toLowerCase();const matches=pedidos.filter(p=>{if(campo==='nombre')return(p.nombre||'').toLowerCase().includes(q);if(campo==='dni')return(p.dni||'').includes(q);return false});const porDni={};for(const p of matches){const key=p.dni||p.nombre;if(!porDni[key]||p.id>porDni[key].id)porDni[key]=p}return Object.values(porDni).slice(0,6)}
+function mostrarAutocompletado(resultados,listEl){if(!resultados.length){listEl.classList.remove('visible');listEl.innerHTML='';return}listEl.innerHTML=resultados.map(p=>'<div class="autocomplete-item" data-id="'+p.id+'"><strong>'+(p.nombre||'-')+'</strong><span class="ac-meta">&nbsp;\u2014 DNI: '+(p.dni||'-')+' \u00b7 Tel: '+(p.tel||'-')+'</span></div>').join('');listEl.classList.add('visible');listEl.querySelectorAll('.autocomplete-item').forEach(item=>{item.addEventListener('click',()=>{cargarDatosCliente(parseInt(item.dataset.id));listEl.classList.remove('visible')})})}
+function cargarDatosCliente(id){const d=getPedidos().find(p=>p.id===id);if(!d)return;$('f-nombre').value=d.nombre||'';$('f-dni').value=d.dni||'';$('f-tel').value=d.tel||'';$('f-tipo').value=d.tipo||'normal';$('f-medico').value=d.medico||'';$('f-matricula').value=d.matricula||'';$('f-fecha-receta').value=d.fechaReceta||'';if(d.l){$('l-od-esf').value=d.l.od?.esf||'';$('l-od-cil').value=d.l.od?.cil||'';$('l-od-eje').value=d.l.od?.eje||'';$('l-od-adi').value=d.l.od?.adi||'';$('l-oi-esf').value=d.l.oi?.esf||'';$('l-oi-cil').value=d.l.oi?.cil||'';$('l-oi-eje').value=d.l.oi?.eje||'';$('l-oi-adi').value=d.l.oi?.adi||'';$('l-armazon').value=d.l.armazon||'';$('l-lentes').value=d.l.lentes||''}if(d.c){$('c-od-esf').value=d.c.od?.esf||'';$('c-od-cil').value=d.c.od?.cil||'';$('c-od-eje').value=d.c.od?.eje||'';$('c-od-adi').value=d.c.od?.adi||'';$('c-oi-esf').value=d.c.oi?.esf||'';$('c-oi-cil').value=d.c.oi?.cil||'';$('c-oi-eje').value=d.c.oi?.eje||'';$('c-oi-adi').value=d.c.oi?.adi||'';$('c-armazon').value=d.c.armazon||'';$('c-lentes').value=d.c.lentes||''}$('f-lente').value=d.lente||'';$('f-tratamiento').value=d.tratamiento||'';$('f-obs').value=d.obs||'';$('f-conservar').checked=d.conservar===true||d.conservar==='si';showToast('Datos del cliente precargados','success')}
+$('f-nombre').addEventListener('input',function(){mostrarAutocompletado(buscarClientes(this.value,'nombre'),$('ac-nombre'))});
+$('f-dni').addEventListener('input',function(){mostrarAutocompletado(buscarClientes(this.value,'dni'),$('ac-dni'))});
+document.addEventListener('click',function(e){if(!e.target.closest('.autocomplete-wrap'))document.querySelectorAll('.autocomplete-list').forEach(el=>el.classList.remove('visible'))});
+function recolectarDatos(){return{id:Date.now(),ts:new Date().toISOString(),nombre:$('f-nombre').value.trim(),dni:$('f-dni').value.trim(),tel:$('f-tel').value.trim(),fecha:$('f-fecha').value,entrega:$('f-entrega').value,tipo:$('f-tipo').value,medico:$('f-medico').value.trim(),matricula:$('f-matricula').value.trim(),fechaReceta:$('f-fecha-receta').value,l:{od:{esf:$('l-od-esf').value,cil:$('l-od-cil').value,eje:$('l-od-eje').value,adi:$('l-od-adi').value},oi:{esf:$('l-oi-esf').value,cil:$('l-oi-cil').value,eje:$('l-oi-eje').value,adi:$('l-oi-adi').value},armazon:$('l-armazon').value.trim(),lentes:$('l-lentes').value.trim()},c:{od:{esf:$('c-od-esf').value,cil:$('c-od-cil').value,eje:$('c-od-eje').value,adi:$('c-od-adi').value},oi:{esf:$('c-oi-esf').value,cil:$('c-oi-cil').value,eje:$('c-oi-eje').value,adi:$('c-oi-adi').value},armazon:$('c-armazon').value.trim(),lentes:$('c-lentes').value.trim()},lente:$('f-lente').value.trim(),tratamiento:$('f-tratamiento').value.trim(),obs:$('f-obs').value.trim(),conservar:$('f-conservar').checked,total:$('f-total').value,senia:$('f-senia').value,resto:$('f-resto').value}}
+function guardarPedido(){const d=recolectarDatos();if(!d.nombre){showToast('Ingres\u00e1 el nombre del paciente');return}const arr=getPedidos();arr.unshift(d);setPedidos(arr);showToast('Pedido guardado','success');syncToFirestore(d)}
+function limpiarForm(){['f-nombre','f-dni','f-tel','f-entrega','f-medico','f-matricula','f-fecha-receta','l-od-esf','l-od-cil','l-od-eje','l-od-adi','l-oi-esf','l-oi-cil','l-oi-eje','l-oi-adi','l-armazon','l-lentes','c-od-esf','c-od-cil','c-od-eje','c-od-adi','c-oi-esf','c-oi-cil','c-oi-eje','c-oi-adi','c-armazon','c-lentes','f-lente','f-tratamiento','f-obs','f-total','f-senia','f-resto'].forEach(id=>{const el=$(id);if(el)el.value=''});$('f-tipo').value='normal';$('f-conservar').checked=false;$('f-fecha').value=new Date().toISOString().split('T')[0]}
+function llenarPrint(d){const set=(id,v)=>{const el=$(id);if(el)el.textContent=v||'-'};const isPami=d.tipo==='pami';const ordenNum=String(d.id).slice(-4);const ordenStr=isPami?'P'+ordenNum:ordenNum;set('p-orden',ordenStr);set('p-nombre',d.nombre);set('p-dni',d.dni);set('p-tel',d.tel);set('p-fecha',fmtDate(d.fecha));set('p-entrega',fmtDate(d.entrega));set('p-medico',d.medico);set('p-matricula',d.matricula);set('p-fecha-receta',d.fechaReceta?fmtDate(d.fechaReceta):'-');set('p-l-od-esf',d.l?.od?.esf);set('p-l-od-cil',d.l?.od?.cil);set('p-l-od-eje',d.l?.od?.eje);set('p-l-od-adi',d.l?.od?.adi);set('p-l-oi-esf',d.l?.oi?.esf);set('p-l-oi-cil',d.l?.oi?.cil);set('p-l-oi-eje',d.l?.oi?.eje);set('p-l-oi-adi',d.l?.oi?.adi);set('p-c-od-esf',d.c?.od?.esf);set('p-c-od-cil',d.c?.od?.cil);set('p-c-od-eje',d.c?.od?.eje);set('p-c-od-adi',d.c?.od?.adi);set('p-c-oi-esf',d.c?.oi?.esf);set('p-c-oi-cil',d.c?.oi?.cil);set('p-c-oi-eje',d.c?.oi?.eje);set('p-c-oi-adi',d.c?.oi?.adi);set('p-lente',d.lente);set('p-tratamiento',d.tratamiento);set('p-obs',d.obs);set('p-l-armazon',d.l?.armazon);set('p-c-armazon',d.c?.armazon);set('p-conservar',d.conservar?'S\u00ed':'No');set('p-total',fmtMoney(d.total));set('p-senia',fmtMoney(d.senia));set('p-resto',fmtMoney(d.resto));set('p2-orden',ordenStr);set('p2-nombre',d.nombre);set('p2-dni',d.dni);set('p2-tel',d.tel);set('p2-fecha',fmtDate(d.fecha));set('p2-entrega',fmtDate(d.entrega));set('p2-medico',d.medico);set('p2-matricula',d.matricula);set('p2-fecha-receta',d.fechaReceta?fmtDate(d.fechaReceta):'-');set('p2-l-od-esf',d.l?.od?.esf);set('p2-l-od-cil',d.l?.od?.cil);set('p2-l-od-eje',d.l?.od?.eje);set('p2-l-od-adi',d.l?.od?.adi);set('p2-l-oi-esf',d.l?.oi?.esf);set('p2-l-oi-cil',d.l?.oi?.cil);set('p2-l-oi-eje',d.l?.oi?.eje);set('p2-l-oi-adi',d.l?.oi?.adi);set('p2-c-od-esf',d.c?.od?.esf);set('p2-c-od-cil',d.c?.od?.cil);set('p2-c-od-eje',d.c?.od?.eje);set('p2-c-od-adi',d.c?.od?.adi);set('p2-c-oi-esf',d.c?.oi?.esf);set('p2-c-oi-cil',d.c?.oi?.cil);set('p2-c-oi-eje',d.c?.oi?.eje);set('p2-c-oi-adi',d.c?.oi?.adi);set('p2-lente',d.lente);set('p2-tratamiento',d.tratamiento);set('p2-l-armazon',d.l?.armazon);set('p2-c-armazon',d.c?.armazon);set('p2-total',fmtMoney(d.total));set('p2-senia',fmtMoney(d.senia));set('p2-resto',fmtMoney(d.resto));set('pt-orden',ordenStr);set('pt-nombre',d.nombre);set('pt-total',fmtMoney(d.total));set('pt-senia',fmtMoney(d.senia));set('pt-resto',fmtMoney(d.resto));set('pt-fecha',fmtDate(d.fecha));set('pt-entrega',fmtDate(d.entrega));const leyN=$('pt-leyenda-normal'),leyP=$('pt-leyenda-pami');if(isPami){leyN.classList.add('print-leyenda-hidden');leyP.classList.remove('print-leyenda-hidden')}else{leyN.classList.remove('print-leyenda-hidden');leyP.classList.add('print-leyenda-hidden')}}
+function imprimirPedido(){const d=recolectarDatos();if(!d.nombre){showToast('Ingres\u00e1 el nombre del paciente');return}llenarPrint(d);setTimeout(()=>window.print(),100)}
+function imprimirDesdeHistorial(id){const d=getPedidos().find(p=>p.id===id);if(!d)return;llenarPrint(d);setTimeout(()=>window.print(),100)}
+function eliminarPedido(id){if(!confirm('\u00bfEliminar este pedido del historial?'))return;setPedidos(getPedidos().filter(p=>p.id!==id));renderHistorial();showToast('Pedido eliminado');syncDeleteFromFirestore(id)}
+function cargarEnForm(id){const d=getPedidos().find(p=>p.id===id);if(!d)return;$('f-nombre').value=d.nombre||'';$('f-dni').value=d.dni||'';$('f-tel').value=d.tel||'';$('f-fecha').value=d.fecha||'';$('f-entrega').value=d.entrega||'';$('f-tipo').value=d.tipo||'normal';$('f-medico').value=d.medico||'';$('f-matricula').value=d.matricula||'';$('f-fecha-receta').value=d.fechaReceta||'';$('l-od-esf').value=d.l?.od?.esf||'';$('l-od-cil').value=d.l?.od?.cil||'';$('l-od-eje').value=d.l?.od?.eje||'';$('l-od-adi').value=d.l?.od?.adi||'';$('l-oi-esf').value=d.l?.oi?.esf||'';$('l-oi-cil').value=d.l?.oi?.cil||'';$('l-oi-eje').value=d.l?.oi?.eje||'';$('l-oi-adi').value=d.l?.oi?.adi||'';$('l-armazon').value=d.l?.armazon||'';$('l-lentes').value=d.l?.lentes||'';$('c-od-esf').value=d.c?.od?.esf||'';$('c-od-cil').value=d.c?.od?.cil||'';$('c-od-eje').value=d.c?.od?.eje||'';$('c-od-adi').value=d.c?.od?.adi||'';$('c-oi-esf').value=d.c?.oi?.esf||'';$('c-oi-cil').value=d.c?.oi?.cil||'';$('c-oi-eje').value=d.c?.oi?.eje||'';$('c-oi-adi').value=d.c?.oi?.adi||'';$('c-armazon').value=d.c?.armazon||'';$('c-lentes').value=d.c?.lentes||'';$('f-lente').value=d.lente||'';$('f-tratamiento').value=d.tratamiento||'';$('f-obs').value=d.obs||'';$('f-conservar').checked=d.conservar===true||d.conservar==='si';$('f-total').value=d.total||'';$('f-senia').value=d.senia||'';$('f-resto').value=d.resto||'';showView('nuevo');showToast('Pedido cargado en formulario','success')}
+function renderHistorial(){const q=($('h-search')?.value||'').toLowerCase();const arr=getPedidos().filter(p=>!q||(p.nombre||'').toLowerCase().includes(q)||(p.dni||'').includes(q));const cont=$('records-container');if(!arr.length){cont.innerHTML='<div class="empty-state"><div class="empty-icon">&#128203;</div>'+(q?'Sin resultados para "'+q+'"':'Todav\u00eda no hay pedidos guardados.')+'</div>';return}cont.innerHTML=arr.map(p=>{const isPami=p.tipo==='pami';const ordenStr=isPami?'P'+String(p.id).slice(-4):String(p.id).slice(-4);const badge=isPami?'<span class="badge-pami">PAMI</span>':'';return'<div class="record-item"><div><div class="record-name">'+(p.nombre||'-')+badge+'</div><div class="record-meta">N\u00b0 '+ordenStr+' &middot; DNI: '+(p.dni||'-')+' &middot; Tel: '+(p.tel||'-')+' &middot; '+(p.fecha?fmtDate(p.fecha):'-')+(p.lente?' &middot; '+p.lente:'')+(p.total?' &middot; Total: '+fmtMoney(p.total):'')+'</div></div><div class="record-actions"><button class="btn btn-outline" onclick="cargarEnForm('+p.id+')" title="Cargar en formulario">&#9998;</button><button class="btn btn-gold" onclick="imprimirDesdeHistorial('+p.id+')" title="Reimprimir">&#128424;</button><button class="btn btn-danger" onclick="eliminarPedido('+p.id+')" title="Eliminar">&#128465;</button></div></div>'}).join('')}
+async function loginGoogle(){try{$('login-error').textContent='';await signInWithRedirect(auth,googleProvider)}catch(e){console.error('Login error:',e);$('login-error').textContent='Error al iniciar sesi\u00f3n. Intent\u00e1 de nuevo.'}}
+async function logoutUser(){try{await signOut(auth)}catch(e){console.error('Logout error:',e)}}
+function initApp(){$('f-fecha').value=new Date().toISOString().split('T')[0];updateSyncUI(navigator.onLine?'ok':'offline')}
+getRedirectResult(auth).catch(e=>console.warn('Redirect result error:',e));
+onAuthStateChanged(auth,async(user)=>{if(user){currentUid=user.uid;$('login-screen').classList.add('hidden');$('app-content').classList.add('visible');$('user-avatar').src=user.photoURL||'';$('user-name').textContent=user.displayName||user.email||'';initApp();await mergeFromFirestore()}else{currentUid=null;$('login-screen').classList.remove('hidden');$('app-content').classList.remove('visible')}});
+window.addEventListener('online',()=>{updateSyncUI('pending');processSyncQueue().then(()=>mergeFromFirestore())});
+window.addEventListener('offline',()=>updateSyncUI('offline'));
+window.showView=showView;window.calcResto=calcResto;window.guardarPedido=guardarPedido;window.limpiarForm=limpiarForm;window.imprimirPedido=imprimirPedido;window.imprimirDesdeHistorial=imprimirDesdeHistorial;window.eliminarPedido=eliminarPedido;window.cargarEnForm=cargarEnForm;window.renderHistorial=renderHistorial;window.loginGoogle=loginGoogle;window.logoutUser=logoutUser;
 </script>
 </body>
 </html>

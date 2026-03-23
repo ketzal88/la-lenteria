@@ -78,7 +78,15 @@
       "WebFetch(domain:www.alibabacloud.com)",
       "WebFetch(domain:developers.chatwoot.com)",
       "Bash(done)",
-      "WebFetch(domain:firebase.google.com)"
+      "WebFetch(domain:firebase.google.com)",
+      "Bash(while read ref)",
+      "Bash(do git update-ref -d \"$ref\")",
+      "Bash(git fsck:*)",
+      "Bash(git -C \"c:\\\\Users\\\\gabri\\\\Documents\\\\Worker\\\\Webs\\\\la-lenteria\" log --all --oneline --decorate -10)",
+      "Bash(git -C \"c:\\\\Users\\\\gabri\\\\Documents\\\\Worker\\\\Webs\\\\la-lenteria\" diff HEAD -- index.html)",
+      "Bash(\"c:/Users/gabri/Documents/Worker/Webs/la-lenteria/index.html\":*)",
+      "Bash(python -c:*)",
+      "Bash(python write_html.py:*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\gabri\\Documents\\Worker\\Webs\\ai-analyzer\\src\\app\\api\\export"
