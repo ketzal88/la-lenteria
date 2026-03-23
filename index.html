@@ -121,11 +121,13 @@
   .cost-note{font-size:.72rem;color:var(--muted);margin-top:.6rem;line-height:1.4}
   #print-area{display:none}
   @media print{
-    @page{size:216mm 216mm;margin:0}
+    @page{size:216mm 356mm;margin:0}
     body>*:not(#print-area){display:none !important}
-    #print-area{display:block !important;width:216mm;min-height:216mm;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white}
+    #print-area{display:block !important;width:216mm;min-height:356mm;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white}
     .print-top{height:140mm;padding:10mm 14mm 12mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
     .print-cut-label{position:absolute;right:3mm;bottom:-3mm;font-size:6pt;color:#999;z-index:1}
+    .print-middle{height:140mm;border-bottom:1px dashed #999;position:relative}
+    .print-middle .print-cut-label{position:absolute;right:3mm;bottom:-3mm;font-size:6pt;color:#999;z-index:1}
     .print-ticket{height:76mm;padding:6mm 14mm;display:flex;flex-direction:column;justify-content:center;position:relative}
     .print-ticket .print-cut-label{top:-3mm;bottom:auto}
     .print-optica-name{margin-bottom:2mm}
@@ -321,6 +323,7 @@
     <div class="print-finance" style="margin-top:auto"><div class="print-finance-block"><div class="print-finance-label">Total</div><div class="print-finance-value big" id="p-total">$0</div></div><div class="print-finance-block"><div class="print-finance-label">Se&#241;a</div><div class="print-finance-value" id="p-senia">$0</div></div><div class="print-finance-block"><div class="print-finance-label">Resta pagar</div><div class="print-finance-value" id="p-resto">$0</div></div><div class="print-fecha">Ingreso: <strong id="p-fecha">-</strong><br>Entrega: <strong id="p-entrega">-</strong></div></div>
     <span class="print-cut-label">&#9986;</span>
   </div>
+  <div class="print-middle"><span class="print-cut-label">&#9986;</span></div>
   <div class="print-ticket">
     <div class="print-optica-name" style="display:flex;align-items:center;justify-content:space-between"><div class="print-optica-sub" style="margin-bottom:0">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;|&nbsp; 11 2766-9650 &nbsp;|&nbsp; @lalenteria.optica</div><img src="LOGO.png" alt="La Lentería"></div>
     <div class="print-divider"></div>
