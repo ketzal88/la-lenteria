@@ -124,11 +124,11 @@
     @page{size:216mm 356mm;margin:0}
     body>*:not(#print-area){display:none !important}
     #print-area{display:block !important;width:216mm;min-height:356mm;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white}
-    .print-top{height:128mm;padding:8mm 14mm 8mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
+    .print-top{height:128mm;padding:8mm 14mm 12mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
     .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:8pt;color:#999;z-index:1}
     .print-middle{height:128mm;border-bottom:1px dashed #999;position:relative}
     .print-middle .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:8pt;color:#999;z-index:1}
-    .print-ticket{height:100mm;padding:8mm 16mm;display:flex;flex-direction:column;justify-content:center;position:relative}
+    .print-ticket{height:100mm;padding:12mm 16mm 8mm;display:flex;flex-direction:column;justify-content:flex-start;position:relative}
     .print-ticket .print-cut-label{top:-4mm;bottom:auto}
     .print-optica-name{margin-bottom:3mm}
     .print-optica-name img{height:24mm;object-fit:contain}
@@ -155,7 +155,7 @@
     .print-fecha{margin-left:auto;font-size:9pt;color:#666;text-align:right}
     .print-ticket-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2mm;gap:4mm}
     .print-ticket-header-left{flex:1;min-width:0}
-    .print-ticket-header>img{height:14mm;object-fit:contain;flex-shrink:0}
+    .print-ticket-header>img{height:22mm;object-fit:contain;flex-shrink:0}
     .print-ticket .print-divider{margin-bottom:3mm}
     .print-ticket-row{display:flex;align-items:baseline;gap:5mm;margin-bottom:1mm;flex-wrap:nowrap}
     .print-ticket-order{font-size:9pt;color:#444;letter-spacing:.05em}
