@@ -153,11 +153,11 @@
     .print-finance-value{font-size:14pt;font-weight:700;color:#1a3a4a}
     .print-finance-value.big{font-size:16pt}
     .print-fecha{margin-left:auto;font-size:9pt;color:#666;text-align:right}
-    .print-ticket-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2mm}
-    .print-ticket-header-left{flex:1}
-    .print-ticket .print-optica-name img{height:14mm}
+    .print-ticket-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2mm;gap:4mm}
+    .print-ticket-header-left{flex:1;min-width:0}
+    .print-ticket-header>img{height:14mm;object-fit:contain;flex-shrink:0}
     .print-ticket .print-divider{margin-bottom:3mm}
-    .print-ticket-row{display:flex;align-items:baseline;gap:5mm;margin-bottom:1mm}
+    .print-ticket-row{display:flex;align-items:baseline;gap:5mm;margin-bottom:1mm;flex-wrap:nowrap}
     .print-ticket-order{font-size:9pt;color:#444;letter-spacing:.05em}
     .print-ticket-name{font-size:14pt;font-weight:700;flex:1}
     .print-ticket-finance{display:flex;gap:6mm;margin-top:3mm;padding-top:3mm;border-top:.5pt solid #ccc}
