@@ -144,15 +144,16 @@
   #print-area{display:none}
   @media print{
     @page{size:216mm 356mm;margin:0}
+    body{margin:0;padding:0;min-height:0;background:white}
     body>*:not(#print-area){display:none !important}
-    #print-area{display:flex !important;flex-direction:column;width:216mm;height:100vh;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white}
-    /* TALON (arriba) - copia GRANDE que queda en la optica con los lentes */
-    .print-top{flex:1;padding:3mm 5mm 4mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
+    #print-area{display:block !important;width:216mm;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white;margin:0}
+    /* STUB (arriba) - comprobante corto que el cliente se lleva */
+    .print-top{height:80mm;padding:4mm 5mm 3mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
     .print-top .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:10pt;color:#999;z-index:1}
-    .print-middle{height:3mm;border-bottom:1px dashed #999;position:relative}
+    .print-middle{height:3mm;border-bottom:1px dashed #999;position:relative;box-sizing:border-box}
     .print-middle .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:10pt;color:#999;z-index:1}
-    /* STUB (abajo) - comprobante corto para el cliente */
-    .print-ticket{height:80mm;padding:4mm 5mm 3mm;display:flex;flex-direction:column;position:relative}
+    /* TALON (abajo) - copia GRANDE del operador, se dobla a la mitad para hacer el sobre */
+    .print-ticket{height:270mm;padding:4mm 5mm 4mm;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
     .print-ticket .print-cut-label{position:absolute;right:3mm;top:-4mm;font-size:10pt;color:#999;z-index:1}
     /* Header compartido */
     .pt-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2mm;gap:5mm}
@@ -374,8 +375,37 @@
   </div>
 </div>
 <div id="print-area">
-  <!-- TALON (arriba) - copia GRANDE que queda en la optica con los lentes -->
+  <!-- STUB (arriba) - comprobante corto que el cliente se lleva -->
   <div class="print-top">
+    <div class="pt-header">
+      <div style="flex:1;min-width:0"><img src="LOGO.png" class="pt-logo-sm" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
+      <div class="ps-head-right">
+        <div class="pt-dates">
+          <div class="pt-date-labels"><span>DIA</span><span>MES</span><span>A&#209;O</span></div>
+          <div class="pt-date-boxes"><span class="pt-date-box" id="ps-dia">-</span><span class="pt-date-box" id="ps-mes">-</span><span class="pt-date-box" id="ps-anio">-</span></div>
+        </div>
+        <div class="pt-num">N&#176; <strong id="ps-orden">-</strong></div>
+      </div>
+    </div>
+    <div class="pt-divider"></div>
+    <div class="ps-body">
+      <div class="ps-nota-col">
+        <div id="ps-leyenda-normal"><strong>NOTA:</strong> No se entrega sin este comprobante. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
+        <div id="ps-leyenda-pami" class="print-leyenda-hidden"><strong>NOTA:</strong> No se entrega sin este comprobante. Los trabajos se entregan &#250;nicamente con el DNI F&#205;SICO y el QR de la aplicaci&#243;n del afiliado. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
+        <div class="ps-nombre" id="ps-nombre">-</div>
+      </div>
+      <div class="ps-totals-col">
+        <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="ps-total">$0</div></div>
+        <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="ps-senia">$0</div></div>
+        <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="ps-resto">$0</div></div>
+      </div>
+    </div>
+    <span class="print-cut-label">&#9986;</span>
+  </div>
+  <div class="print-middle"><span class="print-cut-label">&#9986;</span></div>
+  <!-- TALON (abajo) - copia GRANDE del operador, se dobla a la mitad para hacer el sobre -->
+  <div class="print-ticket">
+    <span class="print-cut-label">&#9986;</span>
     <div class="pt-header">
       <div style="flex:1;min-width:0"><img src="LOGO.png" class="pt-logo" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
       <div class="ps-head-right">
@@ -434,35 +464,6 @@
         <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="p-total">$0</div></div>
         <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="p-senia">$0</div></div>
         <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="p-resto">$0</div></div>
-      </div>
-    </div>
-    <span class="print-cut-label">&#9986;</span>
-  </div>
-  <div class="print-middle"><span class="print-cut-label">&#9986;</span></div>
-  <!-- STUB (abajo) - comprobante corto para el cliente -->
-  <div class="print-ticket">
-    <span class="print-cut-label">&#9986;</span>
-    <div class="pt-header">
-      <div style="flex:1;min-width:0"><img src="LOGO.png" class="pt-logo-sm" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
-      <div class="ps-head-right">
-        <div class="pt-dates">
-          <div class="pt-date-labels"><span>DIA</span><span>MES</span><span>A&#209;O</span></div>
-          <div class="pt-date-boxes"><span class="pt-date-box" id="ps-dia">-</span><span class="pt-date-box" id="ps-mes">-</span><span class="pt-date-box" id="ps-anio">-</span></div>
-        </div>
-        <div class="pt-num">N&#176; <strong id="ps-orden">-</strong></div>
-      </div>
-    </div>
-    <div class="pt-divider"></div>
-    <div class="ps-body">
-      <div class="ps-nota-col">
-        <div id="ps-leyenda-normal"><strong>NOTA:</strong> No se entrega sin este comprobante. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
-        <div id="ps-leyenda-pami" class="print-leyenda-hidden"><strong>NOTA:</strong> No se entrega sin este comprobante. Los trabajos se entregan &#250;nicamente con el DNI F&#205;SICO y el QR de la aplicaci&#243;n del afiliado. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
-        <div class="ps-nombre" id="ps-nombre">-</div>
-      </div>
-      <div class="ps-totals-col">
-        <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="ps-total">$0</div></div>
-        <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="ps-senia">$0</div></div>
-        <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="ps-resto">$0</div></div>
       </div>
     </div>
   </div>
