@@ -146,45 +146,64 @@
     @page{size:216mm 356mm;margin:0}
     body>*:not(#print-area){display:none !important}
     #print-area{display:flex !important;flex-direction:column;width:216mm;height:100vh;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white}
-    .print-top{flex:1;padding:6mm 11mm 6mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
-    .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:8pt;color:#999;z-index:1}
+    /* STUB (arriba) - comprobante corto que se entrega al cliente */
+    .print-top{height:95mm;padding:6mm 11mm 6mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative}
+    .print-top .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:8pt;color:#999;z-index:1}
     .print-middle{height:3mm;border-bottom:1px dashed #999;position:relative}
     .print-middle .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:8pt;color:#999;z-index:1}
-    .print-ticket{height:97mm;padding:6mm 11mm 5mm;display:flex;flex-direction:column;position:relative}
-    .print-ticket .print-cut-label{top:-4mm;bottom:auto}
-    .pt-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2mm}
-    .pt-logo{height:16mm;object-fit:contain}
-    .pt-logo-sm{height:11mm;object-fit:contain}
+    /* TALON (abajo) - copia completa que queda en la optica */
+    .print-ticket{flex:1;padding:6mm 11mm 5mm;display:flex;flex-direction:column;position:relative}
+    .print-ticket .print-cut-label{position:absolute;right:3mm;top:-4mm;font-size:8pt;color:#999;z-index:1}
+    /* Header compartido */
+    .pt-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2mm;gap:4mm}
+    .pt-logo{height:15mm;object-fit:contain}
+    .pt-logo-sm{height:12mm;object-fit:contain}
     .pt-address{font-size:7.5pt;color:#444;margin-top:1mm;line-height:1.4}
-    .pt-num{font-size:10pt;font-weight:700}
+    .pt-num{font-size:11pt;font-weight:700;white-space:nowrap}
     .pt-divider{height:1px;background:#1a3a4a;margin-bottom:2mm}
+    /* Cajitas DIA/MES/ANIO */
+    .pt-dates{display:flex;flex-direction:column;align-items:center}
+    .pt-date-labels{display:flex;gap:1mm;font-size:6.5pt;color:#555;margin-bottom:.5mm;letter-spacing:.04em;font-weight:600}
+    .pt-date-labels span{width:8mm;text-align:center}
+    .pt-date-boxes{display:flex;gap:1mm}
+    .pt-date-box{border:.6pt solid #000;width:8mm;height:6mm;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:600;font-variant-numeric:tabular-nums}
+    /* Stub layout */
+    .ps-head-right{display:flex;align-items:flex-start;gap:5mm}
+    .ps-body{display:flex;gap:4mm;flex:1;margin-top:1mm}
+    .ps-nota-col{flex:1;font-size:7.5pt;color:#333;line-height:1.55;text-align:justify}
+    .ps-totals-col{width:32mm;border-left:.5pt solid #ccc;padding-left:3mm;display:flex;flex-direction:column;gap:3mm}
+    /* Talon fields */
     .pt-field-row{display:flex;gap:4mm;margin-bottom:1.5mm;font-size:9pt;border-bottom:.5pt solid #ccc;padding-bottom:1mm;align-items:baseline}
     .pt-field{flex:1}
     .pt-field-sm{white-space:nowrap}
     .pt-field-label{font-weight:700;font-size:8pt}
+    /* Talon body two columns */
     .pt-body{display:flex;gap:3mm;flex:1;margin-top:2mm}
-    .pt-body-left{flex:1}
-    .pt-body-right{width:30mm;border-left:.5pt solid #ccc;padding-left:3mm;display:flex;flex-direction:column;gap:3.5mm}
-    .pt-grad-section{display:flex;gap:1.5mm;margin-bottom:2mm}
-    .pt-grad-label{width:13mm;font-weight:700;font-size:8pt;text-transform:uppercase;display:flex;align-items:center}
-    .pt-grad-rows{flex:1}
-    .pt-grad-row{display:flex;align-items:baseline;gap:.5mm;margin-bottom:1.5mm;font-size:9pt}
-    .pt-eye{width:7mm;font-weight:700;font-size:8.5pt;flex-shrink:0}
+    .pt-body-left{flex:1;min-width:0}
+    .pt-body-right{width:32mm;border-left:.5pt solid #ccc;padding-left:3mm;display:flex;flex-direction:column;gap:3.5mm}
+    /* Graduacion */
+    .pt-grad-section{display:flex;gap:1.5mm;margin-bottom:2.5mm}
+    .pt-grad-label{width:14mm;font-weight:700;font-size:9pt;text-transform:uppercase;display:flex;align-items:flex-start;padding-top:1mm;flex-shrink:0;color:#1a3a4a}
+    .pt-grad-rows{flex:1;min-width:0}
+    .pt-grad-row{display:flex;align-items:baseline;gap:.5mm;margin-bottom:1.5mm;font-size:9pt;flex-wrap:nowrap}
+    .pt-eye{width:9mm;font-weight:700;font-size:8.5pt;flex-shrink:0}
     .pt-rx-label{font-size:7pt;font-weight:700;text-transform:uppercase;color:#333;white-space:nowrap;margin-right:.5mm}
     .pt-rx-val{min-width:10mm;border-bottom:.5pt solid #888;text-align:center;font-size:9pt;margin-right:2mm;display:inline-block;padding:0 .5mm}
-    .pt-rx-wide{min-width:16mm}
-    .pt-add-row{display:flex;align-items:baseline;gap:2mm;font-size:8.5pt;padding-left:8.5mm;margin-bottom:1mm;color:#555}
+    .pt-rx-wide{min-width:14mm;flex:1}
+    .pt-add-row{display:flex;align-items:baseline;gap:1.5mm;font-size:8.5pt;padding-left:9mm;margin-bottom:1mm;color:#444}
+    /* Totales */
     .pt-total-block{text-align:center}
     .pt-total-label{font-size:7pt;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:.5pt solid #ccc;padding-bottom:.5mm;margin-bottom:1mm}
     .pt-total-val{font-size:11pt;font-weight:700}
     .pt-total-val.highlight{font-size:12pt;border:1.5pt solid #1a3a4a;border-radius:2px;padding:.5mm 2mm;display:inline-block}
-    .pt-conservar-box{border:.5pt solid #000;display:inline-block;padding:1mm 3mm;margin:1.5mm 0;font-size:8.5pt}
-    .pt-extras{display:flex;gap:5mm;font-size:8.5pt;margin-bottom:1mm}
-    .pt-obs{font-size:8.5pt;margin-bottom:1mm}
-    .pkt-body{display:flex;gap:4mm;flex:1;margin-top:1.5mm}
-    .pkt-nota{flex:1;font-size:7.5pt;color:#333;line-height:1.5;text-align:justify}
-    .pkt-totals{width:30mm;border-left:.5pt solid #ccc;padding-left:3mm;display:flex;flex-direction:column;gap:3mm}
-    .pkt-dates{font-size:8pt;color:#444;margin-top:2mm;text-align:center}
+    /* Conservar box */
+    .pt-conservar-box{border:.5pt solid #000;display:inline-block;padding:1mm 3mm;margin:2mm 0;font-size:8.5pt}
+    /* Detalles adicionales */
+    .pt-detalles{margin-top:3mm;padding-top:2.5mm;border-top:.5pt dashed #999}
+    .pt-detalles-title{font-size:7pt;font-weight:700;text-transform:uppercase;color:#1a3a4a;letter-spacing:.15em;margin-bottom:2mm;text-align:center}
+    .pt-detalles-row{display:flex;gap:5mm;font-size:8.5pt;margin-bottom:1.5mm;flex-wrap:wrap}
+    .pt-detalles-row>span{flex:1;min-width:0}
+    .pt-detalles-row.full>span{flex:none;width:100%}
     .print-leyenda-hidden{display:none !important}
   }
 </style>
@@ -354,10 +373,45 @@
   </div>
 </div>
 <div id="print-area">
+  <!-- STUB (arriba) - comprobante corto para el cliente -->
   <div class="print-top">
     <div class="pt-header">
-      <div><img src="LOGO.png" class="pt-logo" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
-      <div style="text-align:right"><div class="pt-num">N&#176; <strong id="p-orden">-</strong></div><div style="font-size:8pt;color:#555;margin-top:1mm">Ingreso: <strong id="p-fecha">-</strong></div></div>
+      <div style="flex:1;min-width:0"><img src="LOGO.png" class="pt-logo-sm" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
+      <div class="ps-head-right">
+        <div class="pt-dates">
+          <div class="pt-date-labels"><span>DIA</span><span>MES</span><span>A&#209;O</span></div>
+          <div class="pt-date-boxes"><span class="pt-date-box" id="ps-dia">-</span><span class="pt-date-box" id="ps-mes">-</span><span class="pt-date-box" id="ps-anio">-</span></div>
+        </div>
+        <div class="pt-num">N&#176; <strong id="ps-orden">-</strong></div>
+      </div>
+    </div>
+    <div class="pt-divider"></div>
+    <div class="ps-body">
+      <div class="ps-nota-col">
+        <div id="ps-leyenda-normal"><strong>NOTA:</strong> No se entrega sin este comprobante. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
+        <div id="ps-leyenda-pami" class="print-leyenda-hidden"><strong>NOTA:</strong> No se entrega sin este comprobante. Los trabajos se entregan &#250;nicamente con el DNI F&#205;SICO y el QR de la aplicaci&#243;n del afiliado. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
+      </div>
+      <div class="ps-totals-col">
+        <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="ps-total">$0</div></div>
+        <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="ps-senia">$0</div></div>
+        <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="ps-resto">$0</div></div>
+      </div>
+    </div>
+    <span class="print-cut-label">&#9986;</span>
+  </div>
+  <div class="print-middle"><span class="print-cut-label">&#9986;</span></div>
+  <!-- TALON (abajo) - copia completa para la optica -->
+  <div class="print-ticket">
+    <span class="print-cut-label">&#9986;</span>
+    <div class="pt-header">
+      <div style="flex:1;min-width:0"><img src="LOGO.png" class="pt-logo" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
+      <div class="ps-head-right">
+        <div class="pt-dates">
+          <div class="pt-date-labels"><span>DIA</span><span>MES</span><span>A&#209;O</span></div>
+          <div class="pt-date-boxes"><span class="pt-date-box" id="p-dia">-</span><span class="pt-date-box" id="p-mes">-</span><span class="pt-date-box" id="p-anio">-</span></div>
+        </div>
+        <div class="pt-num">N&#176; <strong id="p-orden">-</strong></div>
+      </div>
     </div>
     <div class="pt-divider"></div>
     <div class="pt-field-row">
@@ -368,61 +422,47 @@
       <span class="pt-field"><span class="pt-field-label">D.N.I.:</span> <span id="p-dni">-</span></span>
       <span class="pt-field-sm"><span class="pt-field-label">N&#176; Pedido:</span> <span id="p-orden2">-</span></span>
     </div>
-    <div class="pt-field-row">
-      <span class="pt-field"><span class="pt-field-label">M&#233;dico:</span> <span id="p-medico">-</span></span>
-      <span class="pt-field-sm"><span class="pt-field-label">Mat.:</span> <span id="p-matricula">-</span></span>
-      <span class="pt-field-sm"><span class="pt-field-label">Fecha receta:</span> <span id="p-fecha-receta">-</span></span>
-    </div>
     <div class="pt-body">
       <div class="pt-body-left">
         <div class="pt-grad-section">
           <div class="pt-grad-label">LEJOS</div>
           <div class="pt-grad-rows">
-            <div class="pt-grad-row"><span class="pt-eye">OD.</span><span class="pt-rx-label">ESF:</span><span id="p-l-od-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-l-od-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EJE:</span><span id="p-l-od-eje" class="pt-rx-val">-</span><span class="pt-rx-label">LENTES:</span><span id="p-l-lentes" class="pt-rx-val pt-rx-wide">-</span></div>
-            <div class="pt-grad-row"><span class="pt-eye">OI.</span><span class="pt-rx-label">ESF:</span><span id="p-l-oi-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-l-oi-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EJE:</span><span id="p-l-oi-eje" class="pt-rx-val">-</span><span class="pt-rx-label">ARMAZ.:</span><span id="p-l-armazon" class="pt-rx-val pt-rx-wide">-</span></div>
+            <div class="pt-grad-row"><span class="pt-eye">O.D.</span><span class="pt-rx-label">ESF:</span><span id="p-l-od-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-l-od-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EN:</span><span id="p-l-od-eje" class="pt-rx-val">-</span><span class="pt-rx-label">LENTES:</span><span id="p-l-lentes" class="pt-rx-val pt-rx-wide">-</span></div>
+            <div class="pt-grad-row"><span class="pt-eye">O.I.</span><span class="pt-rx-label">ESF:</span><span id="p-l-oi-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-l-oi-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EN:</span><span id="p-l-oi-eje" class="pt-rx-val">-</span><span class="pt-rx-label">ARMAZON:</span><span id="p-l-armazon" class="pt-rx-val pt-rx-wide">-</span></div>
             <div class="pt-add-row"><span class="pt-rx-label">ADD+</span><span id="p-l-od-adi" class="pt-rx-val">-</span></div>
           </div>
         </div>
         <div class="pt-grad-section">
           <div class="pt-grad-label">CERCA</div>
           <div class="pt-grad-rows">
-            <div class="pt-grad-row"><span class="pt-eye">OD.</span><span class="pt-rx-label">ESF:</span><span id="p-c-od-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-c-od-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EJE:</span><span id="p-c-od-eje" class="pt-rx-val">-</span><span class="pt-rx-label">LENTES:</span><span id="p-c-lentes" class="pt-rx-val pt-rx-wide">-</span></div>
-            <div class="pt-grad-row"><span class="pt-eye">OI.</span><span class="pt-rx-label">ESF:</span><span id="p-c-oi-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-c-oi-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EJE:</span><span id="p-c-oi-eje" class="pt-rx-val">-</span><span class="pt-rx-label">ARMAZ.:</span><span id="p-c-armazon" class="pt-rx-val pt-rx-wide">-</span></div>
+            <div class="pt-grad-row"><span class="pt-eye">O.D.</span><span class="pt-rx-label">ESF:</span><span id="p-c-od-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-c-od-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EN:</span><span id="p-c-od-eje" class="pt-rx-val">-</span><span class="pt-rx-label">LENTES:</span><span id="p-c-lentes" class="pt-rx-val pt-rx-wide">-</span></div>
+            <div class="pt-grad-row"><span class="pt-eye">O.I.</span><span class="pt-rx-label">ESF:</span><span id="p-c-oi-esf" class="pt-rx-val">-</span><span class="pt-rx-label">CIL:</span><span id="p-c-oi-cil" class="pt-rx-val">-</span><span class="pt-rx-label">EN:</span><span id="p-c-oi-eje" class="pt-rx-val">-</span><span class="pt-rx-label">ARMAZON:</span><span id="p-c-armazon" class="pt-rx-val pt-rx-wide">-</span></div>
             <div class="pt-add-row"><span class="pt-rx-label">ADD+</span><span id="p-c-od-adi" class="pt-rx-val">-</span></div>
           </div>
         </div>
-        <div class="pt-extras"><span><span class="pt-field-label">Tipo de lente:</span> <span id="p-lente">-</span></span><span><span class="pt-field-label">Tratamiento:</span> <span id="p-tratamiento">-</span></span></div>
-        <div class="pt-obs"><span class="pt-field-label">Observaciones:</span> <span id="p-obs">-</span></div>
         <div class="pt-conservar-box">Conservar Lentes Previos &nbsp;&nbsp;&mdash;&nbsp;&nbsp; <strong id="p-conservar">-</strong></div>
+        <div class="pt-detalles">
+          <div class="pt-detalles-title">&mdash; Detalles adicionales &mdash;</div>
+          <div class="pt-detalles-row">
+            <span><span class="pt-field-label">M&#233;dico:</span> <span id="p-medico">-</span></span>
+            <span><span class="pt-field-label">Mat.:</span> <span id="p-matricula">-</span></span>
+            <span><span class="pt-field-label">F. receta:</span> <span id="p-fecha-receta">-</span></span>
+          </div>
+          <div class="pt-detalles-row">
+            <span><span class="pt-field-label">Tipo de lente:</span> <span id="p-lente">-</span></span>
+            <span><span class="pt-field-label">Tratamiento:</span> <span id="p-tratamiento">-</span></span>
+          </div>
+          <div class="pt-detalles-row full">
+            <span><span class="pt-field-label">Observaciones:</span> <span id="p-obs">-</span></span>
+          </div>
+        </div>
       </div>
       <div class="pt-body-right">
         <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="p-total">$0</div></div>
         <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="p-senia">$0</div></div>
-        <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val" id="p-resto">$0</div></div>
-        <div style="font-size:7.5pt;color:#555;margin-top:auto;text-align:center">Entrega:<br><strong id="p-entrega">-</strong></div>
+        <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="p-resto">$0</div></div>
       </div>
     </div>
-    <span class="print-cut-label">&#9986;</span>
-  </div>
-  <div class="print-middle"><span class="print-cut-label">&#9986;</span></div>
-  <div class="print-ticket">
-    <div class="pt-header">
-      <div><img src="LOGO.png" class="pt-logo-sm" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
-      <div style="text-align:right"><div class="pt-num">N&#176; <strong id="pt-orden">-</strong></div><div style="font-size:11pt;font-weight:700;margin-top:1mm" id="pt-nombre">-</div></div>
-    </div>
-    <div class="pt-divider"></div>
-    <div class="pkt-body">
-      <div style="flex:1">
-        <div id="pt-leyenda-normal" class="pkt-nota"><strong>NOTA:</strong> No se entrega sin este comprobante. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
-        <div id="pt-leyenda-pami" class="pkt-nota print-leyenda-hidden"><strong>NOTA:</strong> No se entrega sin este comprobante. Los trabajos se entregan &#250;nicamente con el DNI F&#205;SICO y el QR de la aplicaci&#243;n del afiliado. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
-      </div>
-      <div class="pkt-totals">
-        <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="pt-total">$0</div></div>
-        <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="pt-senia">$0</div></div>
-        <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="pt-resto">$0</div></div>
-      </div>
-    </div>
-    <div class="pkt-dates">Ingreso: <strong id="pt-fecha">-</strong> &nbsp;&#183;&nbsp; Entrega: <strong id="pt-entrega">-</strong></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -468,7 +508,7 @@ document.addEventListener('click',function(e){if(!e.target.closest('.autocomplet
 function recolectarDatos(){return{id:Date.now(),ts:new Date().toISOString(),nombre:$('f-nombre').value.trim(),dni:$('f-dni').value.trim(),tel:$('f-tel').value.trim(),fecha:$('f-fecha').value,entrega:$('f-entrega').value,tipo:$('f-tipo').value,medico:$('f-medico').value.trim(),matricula:$('f-matricula').value.trim(),fechaReceta:$('f-fecha-receta').value,l:{od:{esf:$('l-od-esf').value,cil:$('l-od-cil').value,eje:$('l-od-eje').value,adi:$('l-od-adi').value},oi:{esf:$('l-oi-esf').value,cil:$('l-oi-cil').value,eje:$('l-oi-eje').value,adi:$('l-oi-adi').value},armazon:$('l-armazon').value.trim(),lentes:$('l-lentes').value.trim()},c:{od:{esf:$('c-od-esf').value,cil:$('c-od-cil').value,eje:$('c-od-eje').value,adi:$('c-od-adi').value},oi:{esf:$('c-oi-esf').value,cil:$('c-oi-cil').value,eje:$('c-oi-eje').value,adi:$('c-oi-adi').value},armazon:$('c-armazon').value.trim(),lentes:$('c-lentes').value.trim()},lente:$('f-lente').value.trim(),tratamiento:$('f-tratamiento').value.trim(),obs:$('f-obs').value.trim(),conservar:$('f-conservar').checked,total:$('f-total').value,senia:$('f-senia').value,resto:$('f-resto').value}}
 function guardarPedido(){const d=recolectarDatos();if(!d.nombre){showToast('Ingres\u00e1 el nombre del paciente');return}const arr=getPedidos();arr.unshift(d);setPedidos(arr);showToast('Pedido guardado','success');syncToFirestore(d)}
 function limpiarForm(){['f-nombre','f-dni','f-tel','f-entrega','f-medico','f-matricula','f-fecha-receta','l-od-esf','l-od-cil','l-od-eje','l-od-adi','l-oi-esf','l-oi-cil','l-oi-eje','l-oi-adi','l-armazon','l-lentes','c-od-esf','c-od-cil','c-od-eje','c-od-adi','c-oi-esf','c-oi-cil','c-oi-eje','c-oi-adi','c-armazon','c-lentes','f-lente','f-tratamiento','f-obs','f-total','f-senia','f-resto'].forEach(id=>{const el=$(id);if(el)el.value=''});$('f-tipo').value='normal';$('f-conservar').checked=false;$('f-fecha').value=new Date().toISOString().split('T')[0]}
-function llenarPrint(d){const set=(id,v)=>{const el=$(id);if(el)el.textContent=v||'-'};const isPami=d.tipo==='pami';const ordenNum=String(d.id).slice(-4);const ordenStr=isPami?'P'+ordenNum:ordenNum;set('p-orden',ordenStr);set('p-nombre',d.nombre);set('p-dni',d.dni);set('p-tel',d.tel);set('p-fecha',fmtDate(d.fecha));set('p-entrega',fmtDate(d.entrega));set('p-medico',d.medico);set('p-matricula',d.matricula);set('p-fecha-receta',d.fechaReceta?fmtDate(d.fechaReceta):'-');set('p-l-od-esf',d.l?.od?.esf);set('p-l-od-cil',d.l?.od?.cil);set('p-l-od-eje',d.l?.od?.eje);set('p-l-od-adi',d.l?.od?.adi);set('p-l-oi-esf',d.l?.oi?.esf);set('p-l-oi-cil',d.l?.oi?.cil);set('p-l-oi-eje',d.l?.oi?.eje);set('p-l-oi-adi',d.l?.oi?.adi);set('p-c-od-esf',d.c?.od?.esf);set('p-c-od-cil',d.c?.od?.cil);set('p-c-od-eje',d.c?.od?.eje);set('p-c-od-adi',d.c?.od?.adi);set('p-c-oi-esf',d.c?.oi?.esf);set('p-c-oi-cil',d.c?.oi?.cil);set('p-c-oi-eje',d.c?.oi?.eje);set('p-c-oi-adi',d.c?.oi?.adi);set('p-lente',d.lente);set('p-tratamiento',d.tratamiento);set('p-obs',d.obs);set('p-l-armazon',d.l?.armazon);set('p-c-armazon',d.c?.armazon);set('p-l-lentes',d.l?.lentes);set('p-c-lentes',d.c?.lentes);set('p-orden2',ordenStr);set('p-conservar',d.conservar?'S\u00ed':'No');set('p-total',fmtMoney(d.total));set('p-senia',fmtMoney(d.senia));set('p-resto',fmtMoney(d.resto));set('pt-orden',ordenStr);set('pt-nombre',d.nombre);set('pt-total',fmtMoney(d.total));set('pt-senia',fmtMoney(d.senia));set('pt-resto',fmtMoney(d.resto));set('pt-fecha',fmtDate(d.fecha));set('pt-entrega',fmtDate(d.entrega));const leyN=$('pt-leyenda-normal'),leyP=$('pt-leyenda-pami');if(isPami){leyN.classList.add('print-leyenda-hidden');leyP.classList.remove('print-leyenda-hidden')}else{leyN.classList.remove('print-leyenda-hidden');leyP.classList.add('print-leyenda-hidden')}}
+function llenarPrint(d){const set=(id,v)=>{const el=$(id);if(el)el.textContent=v||'-'};const isPami=d.tipo==='pami';const ordenNum=String(d.id).slice(-4);const ordenStr=isPami?'P'+ordenNum:ordenNum;const dp=(()=>{if(!d.fecha)return{dia:'-',mes:'-',anio:'-'};const[y,m,di]=d.fecha.split('-');return{dia:di,mes:m,anio:y.slice(-2)}})();set('ps-orden',ordenStr);set('ps-dia',dp.dia);set('ps-mes',dp.mes);set('ps-anio',dp.anio);set('ps-total',fmtMoney(d.total));set('ps-senia',fmtMoney(d.senia));set('ps-resto',fmtMoney(d.resto));const leyN=$('ps-leyenda-normal'),leyP=$('ps-leyenda-pami');if(isPami){leyN.classList.add('print-leyenda-hidden');leyP.classList.remove('print-leyenda-hidden')}else{leyN.classList.remove('print-leyenda-hidden');leyP.classList.add('print-leyenda-hidden')}set('p-orden',ordenStr);set('p-orden2',ordenStr);set('p-dia',dp.dia);set('p-mes',dp.mes);set('p-anio',dp.anio);set('p-nombre',d.nombre);set('p-dni',d.dni);set('p-tel',d.tel);set('p-medico',d.medico);set('p-matricula',d.matricula);set('p-fecha-receta',d.fechaReceta?fmtDate(d.fechaReceta):'-');set('p-l-od-esf',d.l?.od?.esf);set('p-l-od-cil',d.l?.od?.cil);set('p-l-od-eje',d.l?.od?.eje);set('p-l-od-adi',d.l?.od?.adi);set('p-l-oi-esf',d.l?.oi?.esf);set('p-l-oi-cil',d.l?.oi?.cil);set('p-l-oi-eje',d.l?.oi?.eje);set('p-l-oi-adi',d.l?.oi?.adi);set('p-c-od-esf',d.c?.od?.esf);set('p-c-od-cil',d.c?.od?.cil);set('p-c-od-eje',d.c?.od?.eje);set('p-c-od-adi',d.c?.od?.adi);set('p-c-oi-esf',d.c?.oi?.esf);set('p-c-oi-cil',d.c?.oi?.cil);set('p-c-oi-eje',d.c?.oi?.eje);set('p-c-oi-adi',d.c?.oi?.adi);set('p-l-armazon',d.l?.armazon);set('p-c-armazon',d.c?.armazon);set('p-l-lentes',d.l?.lentes);set('p-c-lentes',d.c?.lentes);set('p-lente',d.lente);set('p-tratamiento',d.tratamiento);set('p-obs',d.obs);set('p-conservar',d.conservar?'S\u00ed':'No');set('p-total',fmtMoney(d.total));set('p-senia',fmtMoney(d.senia));set('p-resto',fmtMoney(d.resto))}
 function mostrarAvisoImprimir(cb){const t=$('toast');t.textContent='En el di\u00e1logo: Escala 100% \u2022 Papel 216\u00d7356mm \u2022 Sin m\u00e1rgenes';t.className='toast show';setTimeout(()=>{t.className='toast';cb()},800)}
 function imprimirPedido(){const d=recolectarDatos();if(!d.nombre){showToast('Ingres\u00e1 el nombre del paciente');return}llenarPrint(d);mostrarAvisoImprimir(()=>window.print())}
 function imprimirDesdeHistorial(id){const d=getPedidos().find(p=>p.id===id);if(!d)return;llenarPrint(d);mostrarAvisoImprimir(()=>window.print())}
