@@ -148,12 +148,12 @@
     body>*:not(#print-area){display:none !important}
     #print-area{display:block !important;width:216mm;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white;margin:0}
     /* STUB (arriba) - comprobante corto que el cliente se lleva */
-    .print-top{height:115mm;padding:7mm 10mm 3mm 10mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
+    .print-top{height:100mm;padding:7mm 10mm 3mm 10mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
     .print-top .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:10pt;color:#999;z-index:1}
     .print-middle{height:3mm;border-bottom:1px dashed #999;position:relative;box-sizing:border-box}
     .print-middle .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:10pt;color:#999;z-index:1}
     /* TALON (abajo) - copia GRANDE del operador, se dobla a la mitad para hacer el sobre */
-    .print-ticket{height:235mm;padding:7mm 10mm 4mm 10mm;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
+    .print-ticket{height:250mm;padding:7mm 10mm 4mm 10mm;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
     .print-ticket .print-cut-label{position:absolute;right:3mm;top:-4mm;font-size:10pt;color:#999;z-index:1}
     /* Header compartido */
     .pt-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2mm;gap:5mm}
@@ -171,8 +171,8 @@
     /* Stub layout */
     .ps-head-right{display:flex;align-items:flex-start;gap:5mm}
     .ps-body{display:flex;gap:5mm;flex:1;margin-top:2mm}
-    .ps-nota-col{flex:1;font-size:10pt;color:#222;line-height:1.5;text-align:justify;display:flex;flex-direction:column;justify-content:space-between}
-    .ps-totals-col{width:42mm;border-left:.6pt solid #888;padding-left:4mm;display:flex;flex-direction:column;gap:3mm;justify-content:space-between}
+    .ps-nota-col{flex:1;font-size:10pt;color:#222;line-height:1.5;text-align:justify}
+    .ps-totals-col{width:42mm;border-left:.6pt solid #888;padding-left:4mm;display:flex;flex-direction:column;gap:3mm}
     .ps-nombre{font-size:16pt;font-weight:700;color:#1a3a4a;margin-top:2mm}
     /* Talon fields */
     .pt-field-row{display:flex;gap:5mm;margin-bottom:2.5mm;font-size:12pt;border-bottom:.6pt solid #888;padding-bottom:1.5mm;align-items:baseline}
