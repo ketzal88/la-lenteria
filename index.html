@@ -148,12 +148,12 @@
     body>*:not(#print-area){display:none !important}
     #print-area{display:block !important;width:216mm;font-family:'DM Sans',Arial,sans-serif;color:#000;background:white;margin:0}
     /* STUB (arriba) - comprobante corto que el cliente se lleva */
-    .print-top{height:95mm;padding:7mm 10mm 3mm 10mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
+    .print-top{height:85mm;padding:7mm 10mm 3mm 10mm;border-bottom:1px dashed #999;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
     .print-top .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:10pt;color:#999;z-index:1}
     .print-middle{height:3mm;border-bottom:1px dashed #999;position:relative;box-sizing:border-box}
     .print-middle .print-cut-label{position:absolute;right:3mm;bottom:-4mm;font-size:10pt;color:#999;z-index:1}
     /* TALON (abajo) - copia GRANDE del operador, se dobla a la mitad para hacer el sobre */
-    .print-ticket{height:255mm;padding:7mm 10mm 4mm 10mm;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
+    .print-ticket{height:265mm;padding:7mm 10mm 4mm 10mm;display:flex;flex-direction:column;position:relative;box-sizing:border-box;overflow:hidden}
     .print-ticket .print-cut-label{position:absolute;right:3mm;top:-4mm;font-size:10pt;color:#999;z-index:1}
     /* Header compartido */
     .pt-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2mm;gap:5mm}
@@ -169,10 +169,11 @@
     .pt-date-boxes{display:flex;gap:1mm}
     .pt-date-box{border:.8pt solid #000;width:10mm;height:7mm;display:flex;align-items:center;justify-content:center;font-size:13pt;font-weight:600;font-variant-numeric:tabular-nums}
     /* Stub layout */
-    .ps-head-right{display:flex;align-items:flex-start;gap:5mm}
+    .ps-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:3mm}
+    .ps-head-row{display:flex;align-items:flex-start;gap:5mm}
     .ps-body{display:flex;gap:5mm;flex:1;margin-top:2mm}
-    .ps-nota-col{flex:1;font-size:10pt;color:#222;line-height:1.5;text-align:justify}
-    .ps-totals-col{width:42mm;border-left:.6pt solid #888;padding-left:4mm;display:flex;flex-direction:column;gap:3mm}
+    .ps-nota-col{font-size:10pt;color:#222;line-height:1.5;text-align:justify;margin-top:3mm}
+    .ps-totals-col{width:42mm;display:flex;flex-direction:column;gap:3mm}
     .ps-nombre{font-size:16pt;font-weight:700;color:#1a3a4a;margin-top:2mm}
     /* Talon fields */
     .pt-field-row{display:flex;gap:5mm;margin-bottom:2.5mm;font-size:12pt;border-bottom:.6pt solid #888;padding-bottom:1.5mm;align-items:baseline}
@@ -378,26 +379,28 @@
   <!-- STUB (arriba) - comprobante corto que el cliente se lleva -->
   <div class="print-top">
     <div class="pt-header">
-      <div style="flex:1;min-width:0"><img src="LOGO.png" class="pt-logo-sm" alt="La Lenter&#237;a"><div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div></div>
-      <div class="ps-head-right">
-        <div class="pt-dates">
-          <div class="pt-date-labels"><span>DIA</span><span>MES</span><span>A&#209;O</span></div>
-          <div class="pt-date-boxes"><span class="pt-date-box" id="ps-dia">-</span><span class="pt-date-box" id="ps-mes">-</span><span class="pt-date-box" id="ps-anio">-</span></div>
+      <div style="flex:1;min-width:0">
+        <img src="LOGO.png" class="pt-logo-sm" alt="La Lenter&#237;a">
+        <div class="pt-address">Av. San Mart&#237;n 2083 - R. Mej&#237;a &nbsp;&#183;&nbsp; &#9742; 11 2766-9650 &nbsp;&#183;&nbsp; @lalenteria.optica</div>
+        <div class="ps-nota-col">
+          <div id="ps-leyenda-normal"><strong>NOTA:</strong> No se entrega sin este comprobante. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
+          <div id="ps-leyenda-pami" class="print-leyenda-hidden"><strong>NOTA:</strong> No se entrega sin este comprobante. Los trabajos se entregan &#250;nicamente con el DNI F&#205;SICO y el QR de la aplicaci&#243;n del afiliado. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
+          <div class="ps-nombre" id="ps-nombre">-</div>
         </div>
-        <div class="pt-num">N&#176; <strong id="ps-orden">-</strong></div>
       </div>
-    </div>
-    <div class="pt-divider"></div>
-    <div class="ps-body">
-      <div class="ps-nota-col">
-        <div id="ps-leyenda-normal"><strong>NOTA:</strong> No se entrega sin este comprobante. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
-        <div id="ps-leyenda-pami" class="print-leyenda-hidden"><strong>NOTA:</strong> No se entrega sin este comprobante. Los trabajos se entregan &#250;nicamente con el DNI F&#205;SICO y el QR de la aplicaci&#243;n del afiliado. Pasados los 30 (treinta) d&#237;as de la fecha estipulada los precios ser&#225;n actualizados. Pasados los 60 (sesenta) d&#237;as la empresa no se hace responsable.</div>
-        <div class="ps-nombre" id="ps-nombre">-</div>
-      </div>
-      <div class="ps-totals-col">
-        <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="ps-total">$0</div></div>
-        <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="ps-senia">$0</div></div>
-        <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="ps-resto">$0</div></div>
+      <div class="ps-head-right">
+        <div class="ps-head-row">
+          <div class="pt-dates">
+            <div class="pt-date-labels"><span>DIA</span><span>MES</span><span>A&#209;O</span></div>
+            <div class="pt-date-boxes"><span class="pt-date-box" id="ps-dia">-</span><span class="pt-date-box" id="ps-mes">-</span><span class="pt-date-box" id="ps-anio">-</span></div>
+          </div>
+          <div class="pt-num">N&#176; <strong id="ps-orden">-</strong></div>
+        </div>
+        <div class="ps-totals-col">
+          <div class="pt-total-block"><div class="pt-total-label">Total</div><div class="pt-total-val" id="ps-total">$0</div></div>
+          <div class="pt-total-block"><div class="pt-total-label">Se&#241;a</div><div class="pt-total-val" id="ps-senia">$0</div></div>
+          <div class="pt-total-block"><div class="pt-total-label">Restan</div><div class="pt-total-val highlight" id="ps-resto">$0</div></div>
+        </div>
       </div>
     </div>
     <span class="print-cut-label">&#9986;</span>
