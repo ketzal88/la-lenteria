@@ -92,5 +92,8 @@
     "additionalDirectories": [
       "c:\\Users\\gabri\\Documents\\Worker\\Webs\\ai-analyzer\\src\\app\\api\\export"
     ]
+  },
+  "enabledPlugins": {
+    "ponytail@ponytail": true
   }
 }
